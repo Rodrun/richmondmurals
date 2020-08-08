@@ -1,0 +1,31 @@
+{
+  "name": "richmondmurals",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "node server.js",
+    "client": "cd client && npm start"
+  },
+  "author": "Juan Mendez",
+  "license": "ISC",
+  "dependencies": {
+    "@mapbox/mapbox-gl-geocoder": "^4.6.0",
+    "bootstrap": "^4.5.2",
+    "concurrently": "^5.2.0",
+    "express": "^4.17.1",
+    "jquery": "^3.5.1",
+    "mapbox-gl": "^1.11.1",
+    "mongoose": "^5.9.25",
+    "react": "^16.13.1",
+    "react-bootstrap": "^1.3.0"
+  },
+  "devDependencies": {
+    "eslint-plugin-react": "^7.20.5",
+    "eslint-plugin-react-hooks": "^4.0.8",
+    "mocha": "^8.1.0",
+    "typescript": "^3.9.7"
+  }
+}
