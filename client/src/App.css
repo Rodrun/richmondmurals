@@ -1,9 +1,15 @@
+body {
+    min-height: 100vh;
+}
+
+.outer {
+    display: flex;
+    flex-flow: column;
+    height: 100vh;
+}
+
 .mapContainer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
+    flex-grow: 1;
 }
 
 .sidebarStyle {

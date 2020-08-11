@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Navbar from 'react-bootstrap/Navbar'
+import {Navbar, Nav} from 'react-bootstrap'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import './App.css'
 import mapboxgl from 'mapbox-gl'
@@ -160,11 +160,22 @@ class App extends Component {
 
   render() {
     return (
-      <div>
-        <div className='sidebarStyle'>
-          <div>Longitude: {this.state.lng} | Latitude: {this.state.lat} | Zoom: {this.state.zoom}</div>
+      <div className='outer'>
+        <Navbar className='nav' bg="light" expand="lg">
+          <Navbar.Brand href="/">Richmond Mural Project</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mr-auto">
+              <Nav.Link href="/">About</Nav.Link>
+              <Nav.Link href="/">Submit a Mural</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+        <div ref={el => this.mapContainer = el} className='mapContainer'>
+          <div className='sidebarStyle'>
+            <div>Longitude: {this.state.lng} | Latitude: {this.state.lat} | Zoom: {this.state.zoom}</div>
+          </div>
         </div>
-        <div ref={el => this.mapContainer = el} className='mapContainer' />
       </div>
     )
   }
