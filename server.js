@@ -49,4 +49,5 @@ app.get("/api/mural/:id", function(req, res) {
 // Production-ready build
 if (process.env.NODE_ENV === "production") {
     app.use(express.static("client/build"));
+    app.use("/admin", express.static("admin/build"));
 }
