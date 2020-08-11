@@ -24,3 +24,19 @@ body {
     padding: 6px;
     font-weight: bold;
 }
+
+.pageContainer {
+    padding-top: 30px;
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+.submitCard {
+    /* width: 50%; */
+    /* display: inline-block; */
+    /* height: 12vh; */
+}
+
+.submitCard .card-img-top {
+    object-fit: cover;
+}

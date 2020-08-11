@@ -4,6 +4,8 @@ import { Switch, Route, Link } from 'react-router-dom';
 import Mapbox from './Mapbox.js';
 import About from './About.js';
 import Submit from './Submit.js';
+import ArtistSubmit from './ArtistSubmit.js';
+import ViewerSubmit from './ViewerSubmit.js';
 
 class Navigation extends Component {
     render() {
@@ -23,6 +25,8 @@ class Navigation extends Component {
                     <Route exact path="/" component={Mapbox}/>
                     <Route exact path="/about" component={About}/>
                     <Route exact path="/submit" component={Submit}/>
+                    <Route exact path="/artistsubmission" component={ArtistSubmit}/>
+                    <Route exact path="/viewersubmission" component={ViewerSubmit}/>
                     <Route render={function () {
                         return <h2> Page not found</h2>
                     }} />
