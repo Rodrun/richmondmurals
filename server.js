@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 8080;
-
+const path = require('path')
 const mongoose = require("mongoose");
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
@@ -14,13 +14,24 @@ mongoose.connect(URI,
         useUnifiedTopology: true,
         useNewUrlParser: true
     },
-    err => console.log(`mongoose callback: ${err}`));
-// Create DB Model for querying
+    err => {
+        if (err) console.log(`mongoose error: ${err}`)
+    }
+);
+// DB Model for active murals
 const muralSchema = mongoose.Schema({
-    address: Object,
-    name: String,
+    properties: Object,
+    geometry: Object,
 });
 var Mural = mongoose.model("murals", muralSchema);
+// DB Model for pending murals
+const pendingSchema = mongoose.Schema({
+    geometry: Object,
+    title: String,
+    desc: String
+});
+var PendingMural = mongoose.model("pending", pendingSchema);
+var PendingReject = mongoose.model("reject", pendingSchema);
 
 // List GET route
 // This might not scale well, but for now it works fine
@@ -48,6 +59,11 @@ app.get("/api/mural/:id", function(req, res) {
 
 // Production-ready build
 if (process.env.NODE_ENV === "production") {
-    app.use(express.static("client/build"));
-    app.use("/admin", express.static("admin/build"));
+    // Client static file serving
+    app.use(express.static(path.join(__dirname, "client", "build")));
+    // Admin static file serving
+    app.use("/admin/", express.static(path.join(__dirname, "admin", "build")));
+    app.get("/admin/*", function(req, res) {
+        res.sendFile(path.join(__dirname, "admin", "index.html"))
+    });
 }

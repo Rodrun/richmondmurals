@@ -1,1 +1,1 @@
-web: yarn run server
+web: yarn build && yarn server
