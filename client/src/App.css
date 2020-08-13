@@ -27,16 +27,11 @@ body {
 
 .pageContainer {
     padding-top: 30px;
-    padding-left: 100px;
-    padding-right: 100px;
-}
-
-.submitCard {
-    /* width: 50%; */
-    /* display: inline-block; */
-    /* height: 12vh; */
+    padding-left: 10vw;
+    padding-right: 10vw;
 }
 
 .submitCard .card-img-top {
     object-fit: cover;
+    height: 30vh;
 }

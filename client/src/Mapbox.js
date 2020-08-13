@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import MuralPopup from './MuralPopup';
 
 mapboxgl.accessToken = "pk.eyJ1IjoianVhbm1lbmRnIiwiYSI6ImNrZGRqZ3F5YzFucm8ydXBkNmRraWVyZW4ifQ.fOgpbBWhLUa-hTut1Q5cRw";
 
@@ -124,9 +126,11 @@ class Mapbox extends Component {
               })
     
               // Show popup on mural click
-              map.on('click', 'points', function(e) {
-                let coordinates = e.features[0].geometry.coordinates.slice()
-                let desc = e.features[0].properties.desc
+              map.on('click', 'points', (e) => {
+                let coordinates = e.features[0].geometry.coordinates.slice();
+                let desc = e.features[0].properties.desc;
+                let title = e.features[0].properties.title;
+                console.log(e.features);
     
                 // Ensure that if the map is zoomed out such that multiple
                 // copies of the feature are visible, the popup appears
@@ -134,16 +138,23 @@ class Mapbox extends Component {
                 while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
                   coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
                 }
-    
-                // TODO: Add more HTML besides the desc; i.e. share link, images
-                new mapboxgl.Popup()
-                  .setLngLat(coordinates)
-                  .setHTML(desc)
-                  .addTo(map)
+
+                this.addPopup(map, coordinates, title, desc);
               })
             }) // then
             .catch(err => console.log(err))
         }) // on load
+    }
+
+    addPopup = (map, coordinates, title, desc) => {
+      let popup = <MuralPopup title={title} desc={desc}/>
+      const popupContainer = document.createElement('div');
+      ReactDOM.render(popup, popupContainer);
+
+       new mapboxgl.Popup()
+       .setLngLat(coordinates)
+       .setDOMContent(popupContainer)
+       .addTo(map);
     }
 
     callBackendAPI = async () => {

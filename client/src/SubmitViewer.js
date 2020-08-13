@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Button } from 'react-bootstrap';
 
-class ViewerSubmit extends Component {
+class SubmitViewer extends Component {
     render() {
         return (
             <div class="pageContainer">
@@ -30,4 +30,4 @@ class ViewerSubmit extends Component {
     }
 }
 
-export default ViewerSubmit;
+export default SubmitViewer;

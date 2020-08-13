@@ -10,9 +10,9 @@ class Submit extends Component {
             <div class="pageContainer">
                 <Container>
                     <Row>
-                        <Col>
+                        <Col xs={12} md={6}>
                             <Card className="submitCard">
-                                <Card.Img variant="top" className="embed-responsive-item" src={artistSubmission} />
+                                <Card.Img variant="top" src={artistSubmission} />
                                 <Card.Body>
                                     <Card.Title>Artist Submission</Card.Title>
                                     <Card.Text>
@@ -22,7 +22,7 @@ class Submit extends Component {
                                 </Card.Body>
                             </Card>
                         </Col>
-                        <Col>
+                        <Col xs={12} md={6}>
                             <Card className="submitCard">
                                 <Card.Img variant="top" src={viewerSubmission} />
                                 <Card.Body>
