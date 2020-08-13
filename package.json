@@ -9,13 +9,7 @@
     "server": "node server.js",
     "client": "cd client && yarn start",
     "admin": "cd admin && yarn start",
-    "app-installs": "yarn install-client ; yarn install-admin",
-    "install-client": "cd client && yarn install && cd ..",
-    "install-admin": "cd admin && yarn install && cd ..",
-    "build": "yarn app-installs && yarn build-both",
-    "build-both": "yarn build-client ; yarn build-admin",
-    "build-client": "cd client && yarn build && cd ..",
-    "build-admin": "cd admin && yarn build && cd .."
+    "build": "scripts/build.sh"
   },
   "author": "Juan Mendez",
   "license": "ISC",
