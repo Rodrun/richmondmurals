@@ -32,7 +32,12 @@ var Mural = mongoose.model("murals", muralSchema);
 const pendingSchema = mongoose.Schema({
     geometry: Object,
     title: String,
-    desc: String
+    desc: String,
+    artist: String,
+    email: String,
+    images: Array,
+    reject: Boolean,
+    notes:  String,
 });
 var PendingMural = mongoose.model("pending", pendingSchema);
 
