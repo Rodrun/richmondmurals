@@ -1,15 +1,19 @@
 const express = require('express');
-const app = express();
-const port = process.env.PORT || 8080;
-const path = require('path')
+const path = require('path');
 const mongoose = require("mongoose");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const bcrypt = require("bcrypt");
+const app = express();
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
 
+const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 
+// TODO: Move this section to separate file for organizational purposes 
 // Connect to DB
 const URI = process.env.URI || "";
 mongoose.connect(URI,
@@ -39,7 +43,18 @@ const pendingSchema = mongoose.Schema({
     notes:  String,
 });
 var PendingMural = mongoose.model("pending", pendingSchema);
-var PendingReject = mongoose.model("reject", pendingSchema);
+
+// Admin User db model
+const adminSchema = mongoose.Schema({
+    username: String, // Username (should be) is an email
+    password: String // Hashed password, don't store cleartext passwords!
+});
+var Admin = mongoose.model("admin", adminSchema)
+
+passport.use(new LocalStrategy(function(username, password, done) {
+    // TODO: Add verifcation with bcrypt
+    return done(null, username);
+}));
 
 // List GET route
 // This might not scale well, but for now it works fine
@@ -63,6 +78,30 @@ app.get("/api/mural/:id", function(req, res) {
             res.send({ mural: response })
         }
     })
+});
+
+// Pending Mural list GET
+app.get("/api/pending", function(req, res) {
+    Mural.find(function(err, response) {
+        if (err) {
+            res.status(500).send({
+                msg: err
+            });
+        } else {
+            res.status(200).send({
+                list: response,
+                length: response.length
+            });
+        }
+    });
+});
+
+app.post("/api/pending/:id", function(req, res) {
+    // TODO
+});
+
+app.put("/api/pending/:id", function(req, res) {
+    // TODO
 });
 
 // Mural POST route
