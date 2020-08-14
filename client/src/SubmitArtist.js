@@ -4,7 +4,7 @@ import { Form, Button } from 'react-bootstrap';
 class SubmitArtist extends Component {
     render() {
         return (
-            <div class="pageContainer">
+            <div className="pageContainer">
                 <h2>Submit Your Mural</h2>
                 <Form>
 

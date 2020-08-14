@@ -7,7 +7,7 @@ import viewerSubmission from './images/viewersubmission.jpg';
 class Submit extends Component {
     render() {
         return (
-            <div class="pageContainer">
+            <div className="pageContainer">
                 <Container>
                     <Row>
                         <Col xs={12} md={6}>
@@ -18,7 +18,7 @@ class Submit extends Component {
                                     <Card.Text>
                                     Are you a muralist wanting to get your mural on this site?
                                     </Card.Text>
-                                    <a href="/artistsubmission" as={Link} to="/artistsubmission" class="btn btn-primary">Submit your mural</a>
+                                    <a href="/submitartist" as={Link} to="/submitartist" className="btn btn-primary">Submit your mural</a>
                                 </Card.Body>
                             </Card>
                         </Col>
@@ -30,7 +30,7 @@ class Submit extends Component {
                                     <Card.Text>
                                     See a mural you think should be on this site?
                                     </Card.Text>
-                                    <a href="/viewersubmission" as={Link} to="/viewersubmission" class="btn btn-primary">Submit a mural</a>
+                                    <a href="/submitviewer" as={Link} to="/submitviewer" className="btn btn-primary">Submit a mural</a>
                                 </Card.Body>
                             </Card>
                         </Col>

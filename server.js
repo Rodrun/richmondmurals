@@ -4,6 +4,9 @@ const port = process.env.PORT || 8080;
 const path = require('path')
 const mongoose = require("mongoose");
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended: true}));
+
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 
@@ -60,6 +63,11 @@ app.get("/api/mural/:id", function(req, res) {
             res.send({ mural: response })
         }
     })
+});
+
+// Mural POST route
+app.post("/api/submitviewer", function(req, res) {
+    console.log(req.body);
 });
 
 // Production-ready build

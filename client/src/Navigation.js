@@ -25,8 +25,8 @@ class Navigation extends Component {
                     <Route exact path="/" component={Mapbox}/>
                     <Route exact path="/about" component={About}/>
                     <Route exact path="/submit" component={Submit}/>
-                    <Route exact path="/artistsubmission" component={SubmitArtist}/>
-                    <Route exact path="/viewersubmission" component={SubmitViewer}/>
+                    <Route exact path="/submitartist" component={SubmitArtist}/>
+                    <Route exact path="/submitviewer" component={SubmitViewer}/>
                     <Route render={function () {
                         return <h2> Page not found</h2>
                     }} />
