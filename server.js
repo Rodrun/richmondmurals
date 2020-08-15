@@ -32,8 +32,8 @@ const muralSchema = mongoose.Schema({
     geometry: Object,
 });
 var Mural = mongoose.model("murals", muralSchema);
-// DB Model for pending murals
-const pendingSchema = mongoose.Schema({
+// DB Model for pending artist submitted murals
+const pendingArtistSchema = mongoose.Schema({
     geometry: Object,
     title: String,
     desc: String,
@@ -43,7 +43,17 @@ const pendingSchema = mongoose.Schema({
     reject: Boolean,
     notes:  String,
 });
-var PendingMural = mongoose.model("pending", pendingSchema);
+var PendingArtistMural = mongoose.model("pendingArtist", pendingArtistSchema);
+
+// DB Model for pending viewer submitted murals
+const pendingViewerSchema = mongoose.Schema({
+    geometry: Object,
+    email: String,
+    images: Array,
+    reject: Boolean,
+    notes:  String,
+});
+var PendingViewerMural = mongoose.model("pendingViewer", pendingViewerSchema);
 
 // Admin User db model
 const adminSchema = mongoose.Schema({
@@ -81,9 +91,25 @@ app.get("/api/mural/:id", function(req, res) {
     })
 });
 
-// Pending Mural list GET
-app.get("/api/pending", function(req, res) {
-    Mural.find(function(err, response) {
+// Pending Artist Mural list GET
+app.get("/api/pendingartist", function(req, res) {
+    PendingArtistMural.find(function(err, response) {
+        if (err) {
+            res.status(500).send({
+                msg: err
+            });
+        } else {
+            res.status(200).send({
+                list: response,
+                length: response.length
+            });
+        }
+    });
+});
+
+// Pending Viewer Mural list GET
+app.get("/api/pendingviewer", function(req, res) {
+    PendingViewerMural.find(function(err, response) {
         if (err) {
             res.status(500).send({
                 msg: err
