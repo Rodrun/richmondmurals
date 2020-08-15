@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Button } from 'react-bootstrap';
 
-class SubmitArtist extends Component {
+class SubmitArtistForm extends Component {
     render() {
         return (
             <div className="pageContainer">
@@ -45,4 +45,4 @@ class SubmitArtist extends Component {
     }
 }
 
-export default SubmitArtist;
+export default SubmitArtistForm;

@@ -4,10 +4,10 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const bcrypt = require("bcrypt");
+const multer = require('multer');
 const app = express();
 
-const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({extended: true}));
+const upload = multer();
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on port ${port}`));
@@ -16,6 +16,7 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 // TODO: Move this section to separate file for organizational purposes 
 // Connect to DB
 const URI = process.env.URI || "";
+mongoose.pluralize(null); // Disable pluralizing of collection name
 mongoose.connect(URI,
     {
         useUnifiedTopology: true,
@@ -104,9 +105,25 @@ app.put("/api/pending/:id", function(req, res) {
     // TODO
 });
 
-// Mural POST route
-app.post("/api/submitviewer", function(req, res) {
-    console.log(req.body);
+// Mural viewer POST route
+// To do: change route to match /api/pending/:id format
+app.post("/api/submitviewer", upload.single("image"), function(req, res) {
+    const formData = req.body;
+    
+    const image = req.file;
+    // To do: upload image to Google Drive
+
+    let pendingMural = new PendingMural({
+        email: formData.email
+    });
+
+    pendingMural.save()
+        .then(doc => {
+            console.log(doc);
+        })
+        .catch(err => {
+            console.error(err);
+        })
 });
 
 // Production-ready build
