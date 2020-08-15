@@ -27,10 +27,11 @@ class SubmitViewerForm extends Component {
     handleSubmit = async (event) => {
         this.setState({redirect: true});
         var formData = new FormData();
-        formData.append('email', this.state['email']);
+        formData.append('email', this.state.email);
+        // to do: handle no files
         formData.append("image", this.fileInput.current.files[0]);
 
-        const response = await fetch('/api/submitviewer', {
+        const response = await fetch('/api/pendingviewer', {
             method: 'POST',
             body: formData
         });

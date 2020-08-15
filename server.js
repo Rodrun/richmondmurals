@@ -6,17 +6,16 @@ const LocalStrategy = require("passport-local");
 const bcrypt = require("bcrypt");
 const multer = require('multer');
 const app = express();
-
 const upload = multer();
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
+mongoose.pluralize(null); // Disable pluralizing of collection name
 
 // TODO: Move this section to separate file for organizational purposes 
 // Connect to DB
 const URI = process.env.URI || "";
-mongoose.pluralize(null); // Disable pluralizing of collection name
 mongoose.connect(URI,
     {
         useUnifiedTopology: true,
@@ -40,6 +39,7 @@ const pendingArtistSchema = mongoose.Schema({
     artist: String,
     email: String,
     images: Array,
+    instagram: String,
     reject: Boolean,
     notes:  String,
 });
@@ -133,17 +133,41 @@ app.put("/api/pending/:id", function(req, res) {
 
 // Mural viewer POST route
 // To do: change route to match /api/pending/:id format
-app.post("/api/submitviewer", upload.single("image"), function(req, res) {
+app.post("/api/pendingviewer", upload.single("image"), function(req, res) {
     const formData = req.body;
     
     const image = req.file;
     // To do: upload image to Google Drive
 
-    let pendingMural = new PendingMural({
+    let mural = new PendingViewerMural({
         email: formData.email
     });
 
-    pendingMural.save()
+    mural.save()
+        .then(doc => {
+            console.log(doc);
+        })
+        .catch(err => {
+            console.error(err);
+        })
+});
+
+// Mural artist POST route
+app.post("/api/pendingartist", upload.single("image"), function(req, res) {
+    console.log("mural artist post!");
+    const formData = req.body;
+    
+    const image = req.file;
+    // To do: upload image to Google Drive
+
+    let mural = new PendingArtistMural({
+        email: formData.email,
+        artist: formData.artist,
+        desc: formData.description,
+        instagram: formData.instagram
+    });
+
+    mural.save()
         .then(doc => {
             console.log(doc);
         })
