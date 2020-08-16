@@ -28,7 +28,6 @@ class SubmitArtistForm extends Component {
     }
 
     handleSubmit = async (event) => {
-        console.log("handleSubmit");
         this.setState({redirect: true});
         var formData = new FormData();
         formData.append('email', this.state.email);

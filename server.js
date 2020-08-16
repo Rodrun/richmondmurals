@@ -75,6 +75,7 @@ app.get('/api/list', function(req, res) {
         if (err) {
             res.send({ err: err })
         } else {
+
             res.send({ murals: response })
         }
     })
@@ -154,7 +155,6 @@ app.post("/api/pendingviewer", upload.single("image"), function(req, res) {
 
 // Mural artist POST route
 app.post("/api/pendingartist", upload.single("image"), function(req, res) {
-    console.log("mural artist post!");
     const formData = req.body;
     
     const image = req.file;

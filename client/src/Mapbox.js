@@ -9,13 +9,13 @@ mapboxgl.accessToken = "pk.eyJ1IjoianVhbm1lbmRnIiwiYSI6ImNrZGRqZ3F5YzFucm8ydXBkN
 
 class Mapbox extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             data: null,
             lng: -77.44,
             lat: 37.53,
             zoom: 10
-        }
+        };
     }
     
     componentDidMount() {
@@ -25,7 +25,7 @@ class Mapbox extends Component {
           style: 'mapbox://styles/mapbox/streets-v11',
           center: [this.state.lng, this.state.lat],
           zoom: this.state.zoom
-        })
+        });
     
         // Load marker image
         map.loadImage(
@@ -34,7 +34,7 @@ class Mapbox extends Component {
             if (error) throw error
               map.addImage('custom-marker', image)
             }
-        )
+        );
     
         // User's location
         map.addControl(new mapboxgl.GeolocateControl({
@@ -42,7 +42,7 @@ class Mapbox extends Component {
             enableHighAccuracy: true
           },
           trackUserLocation: true
-        }))
+        }));
     
         map.on('move', () => {
           // Update coordinate/zoom state
@@ -51,7 +51,7 @@ class Mapbox extends Component {
             lat: map.getCenter().lat.toFixed(4),
             zoom: map.getZoom().toFixed(2)
           })
-        })
+        });
     
         /**
          * Handles geocoder searches.
@@ -68,17 +68,17 @@ class Mapbox extends Component {
             }
           }
           return matchingFeatures;
-        }
+        };
     
         // Show mouse pointer over mural hover (points layer)
         map.on('mouseenter', 'points', function() {
           map.getCanvas().style.cursor = 'pointer'
-        })
+        });
       
         // Change it back to a pointer when it leaves.
         map.on('mouseleave', 'points', function() {
           map.getCanvas().style.cursor = ''
-        })
+        });
     
         map.on('load', () => {
           // Load mural data
@@ -91,7 +91,7 @@ class Mapbox extends Component {
                   type: 'FeatureCollection',
                   features: res.murals
                 }
-              })
+              });
     
               // Geocoder search bar
               map.addControl(new MapboxGeocoder({
@@ -99,13 +99,13 @@ class Mapbox extends Component {
                 placeHolder: 'Search',
                 localGeocoder: forwardGeocoder,
                 mapboxgl: mapboxgl
-              }))
+              }));
     
               // Add mural data as a source
               map.addSource('murals', {
                 type: 'geojson',
                 data: this.state.data
-              })
+              });
     
               // Add marker layer
               map.addLayer({
@@ -123,14 +123,16 @@ class Mapbox extends Component {
                   'text-offset': [0, 1.25],
                   'text-anchor': 'top'
                 }
-              })
+              });
     
               // Show popup on mural click
               map.on('click', 'points', (e) => {
                 let coordinates = e.features[0].geometry.coordinates.slice();
                 let desc = e.features[0].properties.desc;
                 let title = e.features[0].properties.title;
-                console.log(e.features);
+                let id = e.features[0].properties.id;
+                let image = JSON.parse(e.features[0].properties.images)[0];
+                console.log("properties: ", e.features[0].properties);
     
                 // Ensure that if the map is zoomed out such that multiple
                 // copies of the feature are visible, the popup appears
@@ -139,15 +141,15 @@ class Mapbox extends Component {
                   coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
                 }
 
-                this.addPopup(map, coordinates, title, desc);
-              })
+                this.addPopup(map, coordinates, id, title, desc, image);
+              });
             }) // then
             .catch(err => console.log(err))
-        }) // on load
+        }); // on load
     }
 
-    addPopup = (map, coordinates, title, desc) => {
-      let popup = <MuralPopup title={title} desc={desc}/>
+    addPopup = (map, coordinates, id, title, desc, image) => {
+      let popup = <MuralPopup id={id} title={title} desc={desc} image={image}/>
       const popupContainer = document.createElement('div');
       ReactDOM.render(popup, popupContainer);
 
@@ -158,13 +160,13 @@ class Mapbox extends Component {
     }
 
     callBackendAPI = async () => {
-        const response = await fetch('/api/list')
-        const body = await response.json()
+        const response = await fetch('/api/list');
+        const body = await response.json();
     
         if (response.status !== 200) {
-          throw Error(body.message)
+          throw Error(body.message);
         }
-        return body
+        return body;
     }
     
     render() {

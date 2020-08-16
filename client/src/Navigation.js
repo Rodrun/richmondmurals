@@ -8,6 +8,7 @@ import SubmitArtistForm from './SubmitArtistForm.js';
 import SubmitViewerForm from './SubmitViewerForm.js';
 import Submitted from './Submitted.js';
 import Error from './Error.js';
+import MuralInfo from './MuralInfo.js';
 
 class Navigation extends Component {
     render() {
@@ -31,6 +32,7 @@ class Navigation extends Component {
                     <Route exact path="/submitviewer" component={SubmitViewerForm}/>
                     <Route exact path="/thankyou" component={Submitted}/>
                     <Route exact path="/error" component={Error}/>
+                    <Route path="/mural/:id" component={MuralInfo}/>
                     <Route render={function () {
                         return <h2> Page not found</h2>
                     }} />
