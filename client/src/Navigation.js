@@ -3,6 +3,7 @@ import { Navbar, Nav } from 'react-bootstrap';
 import { Switch, Route, Link } from 'react-router-dom';
 import Mapbox from './Mapbox.js';
 import About from './About.js';
+import Browse from './Browse.js';
 import Submit from './Submit.js';
 import SubmitArtistForm from './SubmitArtistForm.js';
 import SubmitViewerForm from './SubmitViewerForm.js';
@@ -20,6 +21,7 @@ class Navigation extends Component {
                     <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                         <Nav.Link as={Link} to="/about">About</Nav.Link>
+                        <Nav.Link as={Link} to="/browse">Browse Murals</Nav.Link>
                         <Nav.Link as={Link} to="/submit">Submit a Mural</Nav.Link>
                     </Nav>
                     </Navbar.Collapse>
@@ -27,6 +29,7 @@ class Navigation extends Component {
                 <Switch>
                     <Route exact path="/" component={Mapbox}/>
                     <Route exact path="/about" component={About}/>
+                    <Route exact path="/browse" component={Browse}/>
                     <Route exact path="/submit" component={Submit}/>
                     <Route exact path="/submitartist" component={SubmitArtistForm}/>
                     <Route exact path="/submitviewer" component={SubmitViewerForm}/>
