@@ -6,11 +6,11 @@ class MuralPopup extends Component {
     render() {
         return (
             <Card style={{ "marginTop": "10px" }}>
-                <Card.Img variant="top" src={this.props.image} />
+                <Card.Img variant="top" src={JSON.parse(this.props.mural.images)[0]} />
                 <Card.Body>
-                    <Card.Title>{this.props.title}</Card.Title>
-                    <Card.Text>{this.props.desc}</Card.Text>
-                    <a href={"/mural/" + this.props.id} as={Link} to="/info" className="btn btn-primary">More info</a>
+                    <Card.Title>{this.props.mural.title}</Card.Title>
+                    <Card.Text>{this.props.mural.desc}</Card.Text>
+                    <a href={"/mural/" + this.props.mural.id} as={Link} className="btn btn-primary">More info</a>
                 </Card.Body>
             </Card>
         );

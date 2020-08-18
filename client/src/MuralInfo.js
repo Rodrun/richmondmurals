@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Image } from 'react-bootstrap';
+import { Image, Carousel } from 'react-bootstrap';
 import MuralMap from './MuralMap';
 
 class MuralInfo extends Component {
@@ -39,7 +39,20 @@ class MuralInfo extends Component {
                     <div>
                         <h2>{this.state.mural.properties.title}</h2>
                         {/* TO DO: multiple photos */}
-                        <Image src={this.state.mural.properties.images[0]} style={{"width": "100%"}} fluid/>
+                        <div style={{"textAlign": "center"}}>
+                        <Carousel style={{"margin": "30px"}}>
+                            {this.state.mural.properties.images.map(image => {
+                                return (<Carousel.Item>
+                                    <img
+                                    className="d-block w-100"
+                                    src={image}
+                                    alt="First slide"
+                                    />
+                                </Carousel.Item>);
+                            })}
+                        </Carousel>
+                        </div>
+                          
                         <p>{this.state.mural.properties.desc}</p>
                         <hr/>
                         <h5>Artist: {this.state.mural.properties.artist}</h5> 

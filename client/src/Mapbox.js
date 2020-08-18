@@ -128,11 +128,6 @@ class Mapbox extends Component {
               // Show popup on mural click
               map.on('click', 'points', (e) => {
                 let coordinates = e.features[0].geometry.coordinates.slice();
-                let desc = e.features[0].properties.desc;
-                let title = e.features[0].properties.title;
-                let id = e.features[0].properties.id;
-                let image = JSON.parse(e.features[0].properties.images)[0];
-                console.log("properties: ", e.features[0].properties);
     
                 // Ensure that if the map is zoomed out such that multiple
                 // copies of the feature are visible, the popup appears
@@ -141,22 +136,18 @@ class Mapbox extends Component {
                   coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
                 }
 
-                this.addPopup(map, coordinates, id, title, desc, image);
+                let popup = <MuralPopup mural={e.features[0].properties}/>
+                const popupContainer = document.createElement('div');
+                ReactDOM.render(popup, popupContainer);
+
+                new mapboxgl.Popup()
+                .setLngLat(coordinates)
+                .setDOMContent(popupContainer)
+                .addTo(map);
               });
             }) // then
             .catch(err => console.log(err))
         }); // on load
-    }
-
-    addPopup = (map, coordinates, id, title, desc, image) => {
-      let popup = <MuralPopup id={id} title={title} desc={desc} image={image}/>
-      const popupContainer = document.createElement('div');
-      ReactDOM.render(popup, popupContainer);
-
-       new mapboxgl.Popup()
-       .setLngLat(coordinates)
-       .setDOMContent(popupContainer)
-       .addTo(map);
     }
 
     callBackendAPI = async () => {

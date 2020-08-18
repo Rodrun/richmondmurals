@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Container, Row, Col } from 'react-bootstrap';
-import viewerSubmission from './images/viewersubmission.jpg';
 
 class Submit extends Component {
     constructor(props) {
