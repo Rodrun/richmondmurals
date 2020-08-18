@@ -9,6 +9,7 @@ const app = express();
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
+mongoose.pluralize(null); // Disable pluralizing of collection name
 
 // TODO: Move this section to separate file for organizational purposes 
 // Connect to DB
