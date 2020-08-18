@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+.pageContainer {
+  padding-top: 30px;
+  padding-left: 10vw;
+  padding-right: 10vw;
+  padding-bottom: 30px;
+}
