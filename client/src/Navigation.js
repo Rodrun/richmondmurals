@@ -23,7 +23,14 @@ class Navigation extends Component {
                         <Nav.Link as={Link} to="/about">About</Nav.Link>
                         <Nav.Link as={Link} to="/browse">Browse Murals</Nav.Link>
                         <Nav.Link as={Link} to="/submit">Submit a Mural</Nav.Link>
+                        
                     </Nav>
+
+                    {/* TO DO: want link in navbar? */}
+                    {/* <Nav className="ml-auto">
+                        <Nav.Link as={Link} to="/login">Artist Login</Nav.Link>
+                    </Nav> */}
+                    
                     </Navbar.Collapse>
                 </Navbar>
                 <Switch>
