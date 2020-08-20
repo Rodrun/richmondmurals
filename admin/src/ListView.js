@@ -28,7 +28,7 @@ class ListView extends Component {
                             {this.props.murals.map((mural, i) => {
                                 return (
                                     <tr key={i}>
-                                        <td>{mural.date}</td>
+                                        <td>{mural.properties.date}</td>
                                         <td>
                                             <Link to={{
                                                 pathname: "/mural/" + mural.id,
@@ -36,10 +36,10 @@ class ListView extends Component {
                                                     mural: mural
                                                 }
                                             }}>
-                                                {mural.title}
+                                                {mural.properties.title}
                                             </Link>
                                             </td>
-                                        <td>{mural.email}</td>
+                                        <td>{mural.properties.email}</td>
                                     </tr>
                                 );
                             })}
@@ -65,7 +65,6 @@ export class PendingList extends Component {
     componentDidMount() {
         this.callBackendAPI()
             .then(res => {
-                console.log(res);
                 this.setState({murals: res.list});
             });
     }
