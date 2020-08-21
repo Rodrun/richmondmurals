@@ -33,6 +33,7 @@ const muralSchema = mongoose.Schema({
 var Mural = mongoose.model("murals", muralSchema);
 // DB Model for pending artist submitted murals
 const pendingArtistSchema = mongoose.Schema({
+    _id: mongoose.ObjectId,
     properties: Object,
     geometry: Object,
 });
@@ -40,6 +41,7 @@ var PendingArtistMural = mongoose.model("pendingArtist", pendingArtistSchema);
 
 // DB Model for pending viewer submitted murals
 const pendingViewerSchema = mongoose.Schema({
+    _id: mongoose.ObjectId,
     properties: Object,
     geometry: Object,
 });
@@ -114,14 +116,6 @@ app.get("/api/pendingviewer", function(req, res) {
     });
 });
 
-app.post("/api/pending/:id", function(req, res) {
-    // TODO
-});
-
-app.put("/api/pending/:id", function(req, res) {
-    // TODO
-});
-
 // Mural viewer POST route
 // To do: change route to match /api/pending/:id format
 app.post("/api/pendingviewer", upload.array("image"), function(req, res) {
@@ -133,8 +127,12 @@ app.post("/api/pendingviewer", upload.array("image"), function(req, res) {
     // for now: hardcoded links
     const imageLinks = ['https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/reference_guide/outdoor_cat_risks_ref_guide/1800x1200_outdoor_cat_risks_ref_guide.jpg', 'https://www.humanesociety.org/sites/default/files/styles/1240x698/public/2018/08/kitten-440379.jpg?h=c8d00152&itok=1fdekAh2'];
 
+    const id = mongoose.Types.ObjectId();
     let mural = new PendingViewerMural({
+        _id: id,
         properties: {
+            id: id.toHexString(),
+            title: formData.title,
             email: formData.email,
             images: imageLinks
         },
@@ -164,10 +162,13 @@ app.post("/api/pendingartist", upload.array("image"), function(req, res) {
     // for now: hardcoded links
     const imageLinks = ['https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/reference_guide/outdoor_cat_risks_ref_guide/1800x1200_outdoor_cat_risks_ref_guide.jpg', 'https://www.humanesociety.org/sites/default/files/styles/1240x698/public/2018/08/kitten-440379.jpg?h=c8d00152&itok=1fdekAh2'];
 
+    const id = mongoose.Types.ObjectId();
     let mural = new PendingArtistMural({
+        _id: id,
         properties: {
             title: formData.title,
             desc: formData.description,
+            id: id.toHexString(),
             artist: formData.artist,
             images: imageLinks,
             email: formData.email,

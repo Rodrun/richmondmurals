@@ -6,6 +6,7 @@ class SubmitViewerForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            title: '',
             email: '',
             redirect: false,
             error: false
@@ -27,6 +28,7 @@ class SubmitViewerForm extends Component {
     handleSubmit = async (event) => {
         this.setState({redirect: true});
         var formData = new FormData();
+        formData.append('title', this.state.title);
         formData.append('email', this.state.email);
         formData.append("image", this.fileInput.current.files[0]);
 
@@ -53,6 +55,15 @@ class SubmitViewerForm extends Component {
             return (
                 <div className="pageContainer">
                     <h2>Submit a Mural</h2>
+                    <Form.Group controlId="exampleForm.ControlText1">
+                            <Form.Label>Title</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                name="title"
+                                placeholder="Enter a brief description. For example, 'Blue Owl Mural'." 
+                                value={this.state.value} 
+                                onChange={this.handleChange}/>
+                        </Form.Group>
                     <Form onSubmit={this.handleSubmit} encType="multipart/form-data">
                         <Form.Group controlId="formBasicEmail">
                             <Form.Label>Your Email address</Form.Label>

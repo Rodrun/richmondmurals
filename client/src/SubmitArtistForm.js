@@ -33,6 +33,7 @@ class SubmitArtistForm extends Component {
         var formData = new FormData();
         formData.append('title', this.state.title);
         formData.append('email', this.state.email);
+        formData.append('artist', this.state.artist);
         formData.append("image", this.fileInput.current.files[0]);
         formData.append("description", this.state.description);
         formData.append("instagram", this.state.instagram);
