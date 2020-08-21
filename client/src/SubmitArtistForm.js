@@ -6,9 +6,10 @@ class SubmitArtistForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: '',
-            artist: '',
+            title: '',
             description: '',
+            artist: '',
+            email: '',
             instagram: '',
             redirect: false,
             error: false
@@ -30,6 +31,7 @@ class SubmitArtistForm extends Component {
     handleSubmit = async (event) => {
         this.setState({redirect: true});
         var formData = new FormData();
+        formData.append('title', this.state.title);
         formData.append('email', this.state.email);
         formData.append("image", this.fileInput.current.files[0]);
         formData.append("description", this.state.description);
@@ -60,6 +62,14 @@ class SubmitArtistForm extends Component {
                     <h2>Submit Your Mural</h2>
                     <Form onSubmit={this.handleSubmit} encType="multipart/form-data">
                         <Form.Group controlId="exampleForm.ControlText1">
+                            <Form.Label>Mural Title</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                name="title"
+                                value={this.state.value} 
+                                onChange={this.handleChange}/>
+                        </Form.Group>
+                        <Form.Group controlId="exampleForm.ControlText2">
                             <Form.Label>Artist Name</Form.Label>
                             <Form.Control 
                                 type="text" 
@@ -81,6 +91,7 @@ class SubmitArtistForm extends Component {
                             </Form.Text>
                         </Form.Group>
     
+                        {/* TO DO: ALLOW MULTIPLE PHOTOS */}
                         <Form.Group>
                             <Form.File 
                                 id="submitFormControlFile" 
@@ -100,7 +111,7 @@ class SubmitArtistForm extends Component {
                                 onChange={this.handleChange}/>
                         </Form.Group>
     
-                        <Form.Group controlId="exampleForm.ControlText2">
+                        <Form.Group controlId="exampleForm.ControlText3">
                             <Form.Label>Instagram</Form.Label>
                             <Form.Control 
                                 type="text" 
