@@ -33,25 +33,15 @@ const muralSchema = mongoose.Schema({
 var Mural = mongoose.model("murals", muralSchema);
 // DB Model for pending artist submitted murals
 const pendingArtistSchema = mongoose.Schema({
+    properties: Object,
     geometry: Object,
-    title: String,
-    desc: String,
-    artist: String,
-    email: String,
-    images: Array,
-    instagram: String,
-    reject: Boolean,
-    notes:  String,
 });
 var PendingArtistMural = mongoose.model("pendingArtist", pendingArtistSchema);
 
 // DB Model for pending viewer submitted murals
 const pendingViewerSchema = mongoose.Schema({
+    properties: Object,
     geometry: Object,
-    email: String,
-    images: Array,
-    reject: Boolean,
-    notes:  String,
 });
 var PendingViewerMural = mongoose.model("pendingViewer", pendingViewerSchema);
 
