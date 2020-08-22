@@ -105,7 +105,7 @@ class SubmitArtistForm extends Component {
                             </Form.Text>
                         </Form.Group>
     
-                        // TO DO: ALLOW MULTIPLE PHOTOS 
+                        {/* // TO DO: ALLOW MULTIPLE PHOTOS  */}
                         <Form.Group>
                             <Form.File 
                                 id="submitFormControlFile" 
@@ -134,7 +134,15 @@ class SubmitArtistForm extends Component {
                                 value={this.state.value} 
                                 onChange={this.handleChange}/>
                         </Form.Group>
-    
+                        
+                        <Form.Group>
+                            <Form.Label>Location</Form.Label>
+                            <MapPicker 
+                                onChange={this.handleLocationChange} 
+                                lng={this.state.lng} 
+                                lat={this.state.lat}/>
+                        </Form.Group>
+                        
     
                         <Button variant="primary" type="submit">
                             Submit
@@ -142,10 +150,7 @@ class SubmitArtistForm extends Component {
 
                         
                     </Form>
-                    <MapPicker 
-                        onChange={this.handleLocationChange} 
-                        lng={this.state.lng} 
-                        lat={this.state.lat}/>
+                    
 
                 </div>
                 

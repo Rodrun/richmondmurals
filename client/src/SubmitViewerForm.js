@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
+import MapPicker from './MapPicker';
 
 class SubmitViewerForm extends Component {
     constructor(props) {
@@ -9,7 +10,9 @@ class SubmitViewerForm extends Component {
             title: '',
             email: '',
             redirect: false,
-            error: false
+            error: false,
+            lng: -77.44,
+            lat: 37.53,
         };
         this.fileInput = React.createRef();
         this.handleChange = this.handleChange.bind(this);
@@ -31,6 +34,8 @@ class SubmitViewerForm extends Component {
         formData.append('title', this.state.title);
         formData.append('email', this.state.email);
         formData.append("image", this.fileInput.current.files[0]);
+        formData.append("lng", this.state.lng);
+        formData.append("lat", this.state.lat);
 
         const response = await fetch('/api/pendingviewer', {
             method: 'POST',
@@ -40,6 +45,13 @@ class SubmitViewerForm extends Component {
             this.setState({error: true});
             throw Error(response.statusText);
         }
+    }
+
+    handleLocationChange = (lng, lat) => {
+        this.setState({
+            lng: lng,
+            lat: lat
+        });
     }
 
     render() {
@@ -85,9 +97,15 @@ class SubmitViewerForm extends Component {
                                 name="image"
                                 ref={this.fileInput} />
                         </Form.Group>
-    
-                        {/* To do: add  location selector */}
-    
+                        
+                        <Form.Group>
+                            <Form.Label>Location</Form.Label>
+                            <MapPicker 
+                                onChange={this.handleLocationChange} 
+                                lng={this.state.lng} 
+                                lat={this.state.lat}/>
+                        </Form.Group>
+
                         <Button variant="primary" type="submit">
                             Submit
                         </Button>
