@@ -139,7 +139,7 @@ app.post("/api/pendingviewer", upload.array("image"), function(req, res) {
         geometry: {
             // TO DO: don't hardcode
             type: "Point",
-            coordinates: ["77.4421", "37.567"]
+            coordinates: [formData.lng, formData.lat]
         }
     });
 
@@ -175,9 +175,8 @@ app.post("/api/pendingartist", upload.array("image"), function(req, res) {
             instagram: formData.instagram
         },
         geometry: {
-            // TO DO: don't hardcode
             type: "Point",
-            coordinates: ["77.4421", "37.567"]
+            coordinates: [formData.lng, formData.lat]
         }
     });
 

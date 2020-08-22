@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
+import MapPicker from './MapPicker';
 
 class SubmitArtistForm extends Component {
     constructor(props) {
@@ -12,7 +13,9 @@ class SubmitArtistForm extends Component {
             email: '',
             instagram: '',
             redirect: false,
-            error: false
+            error: false,
+            lng: -77.44,
+            lat: 37.53,
         };
         this.fileInput = React.createRef();
         this.handleChange = this.handleChange.bind(this);
@@ -37,6 +40,9 @@ class SubmitArtistForm extends Component {
         formData.append("image", this.fileInput.current.files[0]);
         formData.append("description", this.state.description);
         formData.append("instagram", this.state.instagram);
+        formData.append("lng", this.state.lng);
+        formData.append("lat", this.state.lat);
+
 
         const response = await fetch('/api/pendingartist', {
             method: 'POST',
@@ -46,6 +52,13 @@ class SubmitArtistForm extends Component {
             this.setState({error: true});
             throw Error(response.statusText);
         }
+    }
+
+    handleLocationChange = (lng, lat) => {
+        this.setState({
+            lng: lng,
+            lat: lat
+        });
     }
     
     render() {
@@ -92,7 +105,7 @@ class SubmitArtistForm extends Component {
                             </Form.Text>
                         </Form.Group>
     
-                        {/* TO DO: ALLOW MULTIPLE PHOTOS */}
+                        // TO DO: ALLOW MULTIPLE PHOTOS 
                         <Form.Group>
                             <Form.File 
                                 id="submitFormControlFile" 
@@ -126,8 +139,16 @@ class SubmitArtistForm extends Component {
                         <Button variant="primary" type="submit">
                             Submit
                         </Button>
+
+                        
                     </Form>
+                    <MapPicker 
+                        onChange={this.handleLocationChange} 
+                        lng={this.state.lng} 
+                        lat={this.state.lat}/>
+
                 </div>
+                
             );
         }
     }
