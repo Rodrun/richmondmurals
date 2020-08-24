@@ -11,7 +11,6 @@ const upload = multer();
 const cloudinary = require('cloudinary').v2;
 const DataUriParser = require("datauri/parser");
 const parser = new DataUriParser();
-// const fs = require('fs');
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on port ${port}`));
@@ -137,17 +136,17 @@ const formatFile = file => {
 const uploadImages = async (files) => {
     const imageLinks = [];
     for (file of files) {
-        const formattedFile = formatFile(file);
-        const result = await uploader(formattedFile);
-        const url = result.url;
-        imageLinks.push(url);
-        // fs.unlinkSync(path);       
+        if (file.mimetype.split('/')[0] === "image") {
+            const formattedFile = formatFile(file);
+            const result = await uploader(formattedFile);
+            const url = result.url;
+            imageLinks.push(url);  
+        } 
     }
     return imageLinks;
 }
 
 // Mural viewer POST route
-// To do: change route to match /api/pending/:id format
 app.post("/api/pendingviewer", upload.array("image"), async function(req, res) {
     const imageLinks = await uploadImages(req.files);
     const formData = req.body;
@@ -162,7 +161,6 @@ app.post("/api/pendingviewer", upload.array("image"), async function(req, res) {
             images: imageLinks
         },
         geometry: {
-            // TO DO: don't hardcode
             type: "Point",
             coordinates: [formData.lng, formData.lat]
         }

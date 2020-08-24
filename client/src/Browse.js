@@ -30,7 +30,7 @@ class Submit extends Component {
         if (this.state.murals) {
             return (
                 <div className="pageContainer">
-                    <h3 style={{"margin-bottom": "30px", "margin-left": "15px"}}>Browse Murals</h3>
+                    <h3 style={{"marginBottom": "30px", "margin-left": "15px"}}>Browse Murals</h3>
                     <Container>
                         <Row>
                             {this.state.murals.map((mural, i) => {

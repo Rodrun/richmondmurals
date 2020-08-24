@@ -46,7 +46,7 @@ class MapPicker extends Component {
 
     render() {
         return (
-            <div style={{"height": "300px", "margin-bottom": "30px"}} ref={el => this.mapContainer = el} className='mapContainer'>
+            <div style={{"height": "300px", "marginBottom": "30px"}} ref={el => this.mapContainer = el} className='mapContainer'>
                 <div className='sidebarStyle'>
                     <div>Longitude: {this.state.lng} | Latitude: {this.state.lat} | Zoom: {this.state.zoom}</div>
                 </div>

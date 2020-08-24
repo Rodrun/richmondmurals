@@ -28,12 +28,30 @@ class SubmitViewerForm extends Component {
         });
     }
 
+    handleLocationChange = (lng, lat) => {
+        this.setState({
+            lng: lng,
+            lat: lat
+        });
+    }
+
+    handleFileChange = (event) => {
+        for (const index in this.fileInput.current.files) {
+            if(this.fileInput.current.files[index].size > 10485760) {
+                alert("Uploaded image(s) too large. Images must be less than 10MB.");
+                event.target.value = null;
+            }
+        }
+    }
+
     handleSubmit = async (event) => {
         this.setState({redirect: true});
         var formData = new FormData();
         formData.append('title', this.state.title);
         formData.append('email', this.state.email);
-        formData.append("image", this.fileInput.current.files[0]);
+        for (const index in this.fileInput.current.files) {
+            formData.append("image", this.fileInput.current.files[index]);
+        }
         formData.append("lng", this.state.lng);
         formData.append("lat", this.state.lat);
 
@@ -45,13 +63,6 @@ class SubmitViewerForm extends Component {
             this.setState({error: true});
             throw Error(response.statusText);
         }
-    }
-
-    handleLocationChange = (lng, lat) => {
-        this.setState({
-            lng: lng,
-            lat: lat
-        });
     }
 
     render() {
@@ -95,7 +106,10 @@ class SubmitViewerForm extends Component {
                                 id="submitFormControlFile" 
                                 label="Photo"
                                 name="image"
-                                ref={this.fileInput} />
+                                ref={this.fileInput}
+                                onChange={this.handleFileChange}
+                                multiple 
+                                accept="image/*"/>
                         </Form.Group>
                         
                         <Form.Group>
