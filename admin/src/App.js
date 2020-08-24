@@ -3,6 +3,7 @@ import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { Switch, Route, Link } from 'react-router-dom';
 import { PendingList, ActiveList } from './ListView';
 import MuralInfo from './MuralInfo';
+import MuralEdit from './MuralEdit';
 import Login from './Login';
 import Logs from './Logs';
 import './App.css';
@@ -38,6 +39,7 @@ class App extends Component {
                     <Route exact path="/active" component={ActiveList} />
                     <Route exact path="/logs" component={Logs} />
                     <Route path="/mural/:id" component={MuralInfo}/>
+                    <Route path="/edit/:id" component={MuralEdit}/>
                     <Route render={function () {
                         return <h2>Whoops, this page doesn't exist!</h2>
                     }} />

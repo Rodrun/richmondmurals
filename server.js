@@ -71,7 +71,6 @@ app.get('/api/list', function(req, res) {
         if (err) {
             res.send({ err: err })
         } else {
-
             res.send({ murals: response })
         }
     })

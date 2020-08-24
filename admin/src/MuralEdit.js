@@ -1,10 +1,21 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Carousel } from 'react-bootstrap';
-import MuralEdit from './MuralEdit';
 // import MuralMap from './MuralMap';
 
-class MuralInfo extends Component {
+class MuralEdit extends Component {
+    constructor(props) {
+        super(props);
+         this.state = { pictures: [] };
+         this.onDrop = this.onDrop.bind(this);
+    }
+    onDrop(picture) {
+        this.setState({
+            pictures: this.state.pictures.concat(picture),
+        });
+        console.log(this.state);
+    }
+
     render() {
         let mural = this.props.location.state.mural;
         return (
@@ -13,7 +24,7 @@ class MuralInfo extends Component {
                     <div>
                         <h2>{mural.properties.title}</h2>
                         <div style={{"textAlign": "center"}}>
-                        <Carousel style={{"margin": "30px"}}>
+                        {/* <Carousel style={{"margin": "30px"}}>
                             {mural.properties.images.map((image, i) => {
                                 return (<Carousel.Item key={i}>
                                     <img
@@ -23,7 +34,9 @@ class MuralInfo extends Component {
                                     />
                                 </Carousel.Item>);
                             })}
-                        </Carousel>
+                        </Carousel> */}
+                            
+
                         </div>
                           
                         <p>{mural.properties.desc}</p>
@@ -35,12 +48,8 @@ class MuralInfo extends Component {
                         <hr/>
                         {/* <MuralMap coordinates={mural.geometry.coordinates} /> */}
                         <hr/>
-                        <Link to={{
-                            pathname: "/edit/" + mural.properties.id,
-                            state: {
-                                mural: mural
-                            }
-                        }} className="btn btn-primary">Edit</Link>
+                        {/* to do: submit button */}
+                        <a href={"/edit/" + mural.properties.id} as={Link} to={"/edit/" + mural.properties.id} className="btn btn-primary">Save changes</a>
                     </div> : 
                     <div></div>}
             </div>
@@ -48,4 +57,4 @@ class MuralInfo extends Component {
     }
 }
 
-export default withRouter(MuralInfo);
+export default withRouter(MuralEdit);
