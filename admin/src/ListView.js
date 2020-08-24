@@ -31,7 +31,7 @@ class ListView extends Component {
                                         <td>{mural.properties.date}</td>
                                         <td>
                                             <Link to={{
-                                                pathname: "/mural/" + mural.id,
+                                                pathname: "/mural/" + mural.properties.id,
                                                 state: {
                                                     mural: mural
                                                 }
@@ -58,6 +58,7 @@ export class PendingList extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            type: this.props.type,
             murals: null
         };
     }
@@ -69,8 +70,22 @@ export class PendingList extends Component {
             });
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.type !== this.props.type) {
+            this.setState({
+                type: this.props.type,
+            }, () => {
+                this.callBackendAPI()
+                    .then(res => {
+                        this.setState({murals: res.list});
+                    });
+            });
+            
+        }
+    }
+
     callBackendAPI = async () => {
-        const response = await fetch("/api/pendingviewer");
+        const response = await fetch("/api/pending" + this.state.type);
         const body = await response.json();
 
         if (response.status !== 200) {
@@ -81,7 +96,11 @@ export class PendingList extends Component {
 
     render() {
         return (
-            <ListView murals={this.state.murals} />
+            <div>   
+                <p>{this.state.rerender}</p>
+                <ListView murals={this.state.murals} />
+            </div>
+            
         );
     }
 }

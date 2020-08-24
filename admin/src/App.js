@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { Switch, Route, Link } from 'react-router-dom';
 import { PendingList, ActiveList } from './ListView';
 import MuralInfo from './MuralInfo';
@@ -22,7 +22,10 @@ class App extends Component {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
-                        <Nav.Link as={Link} to={{ pathname: "/pending", state: this.state }}>Pending</Nav.Link>
+                        <NavDropdown title="Pending" id="basic-nav-dropdown">
+                            <NavDropdown.Item as={Link} to={{ pathname: "/pendingviewer", state: this.state }}>Viewer Submitted</NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to={{ pathname: "/pendingartist", state: this.state }}>Artist Submitted</NavDropdown.Item>
+                        </NavDropdown>
                         <Nav.Link as={Link} to={{ pathname: "/active", state: this.state }}>Active</Nav.Link>
                         <Nav.Link as={Link} to={{ pathname: "/logs", state: this.state }}>Logs</Nav.Link>
                     </Nav>
@@ -30,7 +33,8 @@ class App extends Component {
                 </Navbar>
                 <Switch>
                     <Route exact path="/login" component={Login} />
-                    <Route exact path="/pending" component={PendingList} />
+                    <Route exact path="/pendingviewer" render={() => (<PendingList type={"viewer"} />)} />
+                    <Route exact path="/pendingartist" render={() => (<PendingList type={"artist"} />)} />
                     <Route exact path="/active" component={ActiveList} />
                     <Route exact path="/logs" component={Logs} />
                     <Route path="/mural/:id" component={MuralInfo}/>
