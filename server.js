@@ -156,6 +156,7 @@ app.post("/api/pendingviewer", upload.array("image"), async function(req, res) {
         _id: id,
         properties: {
             id: id.toHexString(),
+            date: new Date(),
             title: formData.title,
             email: formData.email,
             images: imageLinks
@@ -187,6 +188,7 @@ app.post("/api/pendingartist", upload.array("image"), async function(req, res) {
             title: formData.title,
             desc: formData.description,
             id: id.toHexString(),
+            date: new Date(),
             artist: formData.artist,
             images: imageLinks,
             email: formData.email,
