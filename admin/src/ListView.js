@@ -12,6 +12,16 @@ class ListView extends Component {
      * key - Authentication key.
      */
 
+    getDate(dateString) {
+        if (!dateString)
+            return '';
+        const date = new Date(dateString);
+        const m = date.getMonth() + 1;
+        const d = date.getDate();
+        const y = date.getFullYear();
+        return m + '-' + d + '-' + y;
+    }
+
     render() {
         if (this.props.murals) {
             return (
@@ -28,7 +38,7 @@ class ListView extends Component {
                             {this.props.murals.map((mural, i) => {
                                 return (
                                     <tr key={i}>
-                                        <td>{mural.properties.date}</td>
+                                        <td>{this.getDate(mural.properties.date)}</td>
                                         <td>
                                             <Link to={{
                                                 pathname: "/mural/" + mural.properties.id,
