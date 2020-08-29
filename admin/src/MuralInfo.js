@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Carousel } from 'react-bootstrap';
-import MuralEdit from './MuralEdit';
 import MuralMap from './MuralMap';
 
 class MuralInfo extends Component {
@@ -38,7 +37,8 @@ class MuralInfo extends Component {
                         <Link to={{
                             pathname: "/edit/" + mural.properties.id,
                             state: {
-                                mural: mural
+                                mural: mural,
+                                type: this.props.location.state.type
                             }
                         }} className="btn btn-primary">Edit</Link>
                     </div> : 

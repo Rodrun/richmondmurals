@@ -9,15 +9,34 @@ class MuralEdit extends Component {
     constructor(props) {
         super(props);
         const mural = this.props.location.state.mural;
-        this.state = {
-            id: mural.properties.id,
-            title: mural.properties.title,
-            email: mural.properties.email,
-            redirect: false,
-            error: false,
-            lng: mural.geometry.coordinates[0],
-            lat: mural.geometry.coordinates[1],
-        };
+        const type = this.props.location.state.type;
+        if (type === "viewer") {
+            this.state = {
+                id: mural.properties.id,
+                title: mural.properties.title,
+                email: mural.properties.email,
+                type: type,
+                redirect: false,
+                error: false,
+                lng: mural.geometry.coordinates[0],
+                lat: mural.geometry.coordinates[1],
+            };
+        } else {
+            this.state = {
+                id: mural.properties.id,
+                title: mural.properties.title,
+                email: mural.properties.email,
+                description: mural.properties.description,
+                artist: mural.properties.artist,
+                instagram: mural.properties.instagram,
+                type: type,
+                redirect: false,
+                error: false,
+                lng: mural.geometry.coordinates[0],
+                lat: mural.geometry.coordinates[1],
+            };
+        }
+        
         this.fileInput = React.createRef();
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -59,15 +78,29 @@ class MuralEdit extends Component {
         formData.append("lng", this.state.lng);
         formData.append("lat", this.state.lat);
 
-        const response = await fetch('/api/pendingviewer/' + this.state.id, {
-            method: 'PUT',
-            body: formData
-        });
-        console.log(response.status);
-        if (response.status !== 200) {
-            this.setState({error: true});
-            throw Error(response.statusText);
-            
+        if (this.state.type === "viewer") {
+            const response = await fetch('/api/pendingviewer/' + this.state.id, {
+                method: 'PUT',
+                body: formData
+            });
+            if (response.status !== 200) {
+                this.setState({error: true});
+                throw Error(response.statusText);
+                
+            }
+        } else {
+            formData.append('artist', this.state.artist);
+            formData.append("description", this.state.description);
+            formData.append("instagram", this.state.instagram);
+            const response = await fetch('/api/pendingartist/' + this.state.id, {
+                method: 'PUT',
+                body: formData
+            });
+            if (response.status !== 200) {
+                this.setState({error: true});
+                throw Error(response.statusText);
+                
+            }
         }
     }
 
@@ -77,13 +110,13 @@ class MuralEdit extends Component {
                 return (<Redirect to="/error" />);
             }
             else {
-                return (<Redirect to="/thankyou" />);
+                return (<Redirect to={"/pending" + this.state.type} />);
             }
         }
         else {
             return (
                 <div className="pageContainer">
-                    <h2>Submit a Mural</h2>
+                    <h2>Edit Pending {this.state.type.charAt(0).toUpperCase() + this.state.type.slice(1)} Mural</h2>
                     <Form.Group controlId="exampleForm.ControlText1">
                             <Form.Label>Title</Form.Label>
                             <Form.Control 
@@ -119,6 +152,42 @@ class MuralEdit extends Component {
                                 multiple 
                                 accept="image/*"/>
                         </Form.Group>
+
+                        {this.state.type === "artist" ? 
+                            <div>
+                            <Form.Group controlId="exampleForm.ControlText2">
+                                <Form.Label>Artist Name</Form.Label>
+                                <Form.Control 
+                                    type="text" 
+                                    name="artist"
+                                    value={this.state.value} 
+                                    defaultValue={this.state.artist}
+                                    onChange={this.handleChange}/>
+                            </Form.Group>
+                            <Form.Group controlId="exampleForm.ControlTextarea1">
+                                <Form.Label>Mural Description</Form.Label>
+                                <Form.Control 
+                                    as="textarea" 
+                                    rows="3" 
+                                    placeholder="This description will be displayed on the info page for your mural."
+                                    name="description"
+                                    value={this.state.value} 
+                                    defaultValue={this.state.description}
+                                    onChange={this.handleChange}/>
+                            </Form.Group>
+                            <Form.Group controlId="exampleForm.ControlText3">
+                                <Form.Label>Instagram</Form.Label>
+                                <Form.Control 
+                                    type="text" 
+                                    placeholder="Enter Instagram handle or link" 
+                                    name="instagram"
+                                    value={this.state.value} 
+                                    onChange={this.handleChange}/>
+                            </Form.Group>
+                            
+                            </div> :
+                            <p></p>
+                        }
                         
                         <Form.Group>
                             <Form.Label>Location</Form.Label>
@@ -129,21 +198,13 @@ class MuralEdit extends Component {
                         </Form.Group>
 
                         <Button variant="primary" type="submit">
-                            Submit
+                            Save Changes
                         </Button>
                     </Form>
                 </div>
             );
         }
     }
-}
-
-export class PendingViewerEdit {
-
-}
-
-export class PendingArtistEdit {
-    
 }
 
 export default MuralEdit;

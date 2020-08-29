@@ -26,10 +26,11 @@ class ListView extends Component {
         if (this.props.murals) {
             return (
                 <div className="pageContainer">
+                    <h3>{this.props.type !== "active" ? "Pending " : ""}{this.props.type.charAt(0).toUpperCase() + this.props.type.slice(1)} Murals</h3>
                     <Table bordered striped size="sm">
                         <thead>
                             <tr>
-                                <th>Date</th>
+                                <th>Date Updated</th>
                                 <th>Title</th>
                                 <th>Email</th>
                             </tr>
@@ -43,7 +44,8 @@ class ListView extends Component {
                                             <Link to={{
                                                 pathname: "/mural/" + mural.properties.id,
                                                 state: {
-                                                    mural: mural
+                                                    mural: mural,
+                                                    type: this.props.type
                                                 }
                                             }}>
                                                 {mural.properties.title}
@@ -108,7 +110,7 @@ export class PendingList extends Component {
     render() {
         return (
             <div>   
-                <ListView murals={this.state.murals} />
+                <ListView murals={this.state.murals} type={this.state.type} />
             </div>
             
         );
@@ -142,7 +144,7 @@ export class ActiveList extends Component {
 
     render() {
         return (
-            <ListView murals={this.state.murals} />
+            <ListView murals={this.state.murals} type={"active"} />
         );
     }
 }

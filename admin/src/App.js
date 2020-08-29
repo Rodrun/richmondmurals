@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { Switch, Route, Link } from 'react-router-dom';
+import Home from './Home';
 import { PendingList, ActiveList } from './ListView';
 import MuralInfo from './MuralInfo';
 import MuralEdit from './MuralEdit';
 import Login from './Login';
 import Logs from './Logs';
+import Error from './Error';
 import './App.css';
 
 class App extends Component {
@@ -19,7 +21,7 @@ class App extends Component {
         return (
             <div>
                 <Navbar className='nav' bg="light" expand="lg">
-                    <Navbar.Brand as={Link} to="/pending">Richmond Mural <b>Admin</b></Navbar.Brand>
+                    <Navbar.Brand as={Link} to="/admin">Richmond Mural <b>Admin</b></Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
@@ -33,11 +35,13 @@ class App extends Component {
                     </Navbar.Collapse>
                 </Navbar>
                 <Switch>
+                    <Route exact path="/admin" component={Home} />
                     <Route exact path="/login" component={Login} />
                     <Route exact path="/pendingviewer" render={() => (<PendingList type={"viewer"} />)} />
                     <Route exact path="/pendingartist" render={() => (<PendingList type={"artist"} />)} />
                     <Route exact path="/active" component={ActiveList} />
                     <Route exact path="/logs" component={Logs} />
+                    <Route exact path="/error" component={Error} />
                     <Route path="/mural/:id" component={MuralInfo}/>
                     <Route path="/edit/:id" component={MuralEdit}/>
                     <Route render={function () {
