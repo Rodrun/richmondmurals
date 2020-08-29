@@ -107,6 +107,7 @@ app.get("/api/pendingartist", function(req, res) {
 app.get("/api/pendingviewer", function(req, res) {
     PendingViewerMural.find(function(err, response) {
         if (err) {
+            console.log("ERROR ON THIS SIDE");
             res.status(500).send({
                 msg: err
             });
@@ -206,6 +207,73 @@ app.post("/api/pendingartist", upload.array("image"), async function(req, res) {
         .catch(err => {
             console.error(err);
         })
+});
+
+// Pending Viewer Mural PUT
+app.put("/api/pendingviewer/:id", upload.array("image"), async function(req, res) {
+    console.log("PUT REQUEST");
+    console.log("ID: ", req.params.id);
+    const imageLinks = await uploadImages(req.files);
+    const formData = req.body;
+    let mural = {
+        properties: {
+            id: req.params.id,
+            date: new Date(),
+            title: formData.title,
+            email: formData.email,
+            images: imageLinks
+        },
+        geometry: {
+            type: "Point",
+            coordinates: [formData.lng, formData.lat]
+        }
+    };
+    PendingViewerMural.findByIdAndUpdate(req.params.id, mural, {useFindAndModify: false},
+        function (err, result) {
+            if (err) {
+                console.error(err);
+                res.send(err);
+            } else {
+                console.log(result);
+                res.send(result);
+            }
+        }
+    );
+});
+
+// Pending Artist Mural PUT
+app.put("/api/pendingartist/:id", upload.array("image"), async function(req, res) {
+    console.log("PUT REQUEST");
+    console.log("ID: ", req.params.id);
+    const imageLinks = await uploadImages(req.files);
+    const formData = req.body;
+    let mural = {
+        properties: {
+            id: req.params.id,
+            date: new Date(),
+            title: formData.title,
+            desc: formData.description,
+            artist: formData.artist,
+            email: formData.email,
+            images: imageLinks,
+            instagram: formData.instagram
+        },
+        geometry: {
+            type: "Point",
+            coordinates: [formData.lng, formData.lat]
+        }
+    };
+    PendingArtistMural.findByIdAndUpdate(req.params.id, mural, {useFindAndModify: false},
+        function (err, result) {
+            if (err) {
+                console.error(err);
+                res.send(err);
+            } else {
+                console.log(result);
+                res.send(result);
+            }
+        }
+    );
 });
 
 // Production-ready build

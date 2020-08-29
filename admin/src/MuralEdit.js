@@ -3,13 +3,21 @@ import { Form, Button } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import MapPicker from './MapPicker';
 
+
+// TO DO: HANDLE IMAGES
 class MuralEdit extends Component {
     constructor(props) {
         super(props);
+        const mural = this.props.location.state.mural;
         this.state = {
-            mural: this.props.location.state.mural
+            id: mural.properties.id,
+            title: mural.properties.title,
+            email: mural.properties.email,
+            redirect: false,
+            error: false,
+            lng: mural.geometry.coordinates[0],
+            lat: mural.geometry.coordinates[1],
         };
-        console.log(this.state);
         this.fileInput = React.createRef();
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -19,19 +27,15 @@ class MuralEdit extends Component {
         const target = event.target;
         const value = target.value;
         const name = target.name;
-        const newProperties = {...this.state.newProperties};
-        newProperties[name] = value;
         this.setState({
-            newProperties: newProperties
+            [name]: value
         });
     }
 
     handleLocationChange = (lng, lat) => {
-        const newProperties = {...this.state.newProperties};
-        newProperties.lng = lng;
-        newProperties.lat = lat;
         this.setState({
-            newProperties: newProperties
+            lng: lng,
+            lat: lat
         });
     }
 
@@ -47,25 +51,26 @@ class MuralEdit extends Component {
     handleSubmit = async (event) => {
         this.setState({redirect: true});
         var formData = new FormData();
-        for (const [key, value] of Object.entries(this.state.newProperties)) {
-            console.log("key: ", key);
-            console.log("value: ", value);
-            formData.append(key, value);
+        formData.append('title', this.state.title);
+        formData.append('email', this.state.email);
+        for (const index in this.fileInput.current.files) {
+            formData.append("image", this.fileInput.current.files[index]);
         }
-        // for (const index in this.fileInput.current.files) {
-        //     formData.append("image", this.fileInput.current.files[index]);
-        // }
+        formData.append("lng", this.state.lng);
+        formData.append("lat", this.state.lat);
 
-        const response = await fetch('/api/pendingartist/' + this.state.mural.properties.id, {
+        const response = await fetch('/api/pendingviewer/' + this.state.id, {
             method: 'PUT',
             body: formData
         });
+        console.log(response.status);
         if (response.status !== 200) {
             this.setState({error: true});
             throw Error(response.statusText);
+            
         }
     }
-    
+
     render() {
         if (this.state.redirect) {
             if (this.state.error) {
@@ -78,92 +83,67 @@ class MuralEdit extends Component {
         else {
             return (
                 <div className="pageContainer">
-                    <h2>Edit Pending Mural</h2>
-                    <Form onSubmit={this.handleSubmit} encType="multipart/form-data">
-                        <Form.Group controlId="exampleForm.ControlText1">
-                            <Form.Label>Mural Title</Form.Label>
+                    <h2>Submit a Mural</h2>
+                    <Form.Group controlId="exampleForm.ControlText1">
+                            <Form.Label>Title</Form.Label>
                             <Form.Control 
                                 type="text" 
                                 name="title"
+                                placeholder="Enter a brief description. For example, 'Blue Owl Mural'." 
                                 value={this.state.value} 
+                                defaultValue={this.state.title}
                                 onChange={this.handleChange}/>
                         </Form.Group>
-                        <Form.Group controlId="exampleForm.ControlText2">
-                            <Form.Label>Artist Name</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                name="artist"
-                                value={this.state.value} 
-                                onChange={this.handleChange}/>
-                        </Form.Group>
-    
+                    <Form onSubmit={this.handleSubmit} encType="multipart/form-data">
                         <Form.Group controlId="formBasicEmail">
-                            <Form.Label>Email Address</Form.Label>
+                            <Form.Label>Your Email address</Form.Label>
                             <Form.Control 
                                 type="email" 
-                                name="email"
-                                placeholder="Enter email"
+                                name="email" 
+                                placeholder="Enter email" 
                                 value={this.state.value} 
-                                onChange={this.handleChange} />
+                                defaultValue={this.state.email}
+                                onChange={this.handleChange}/>
                             <Form.Text className="text-muted">
-                            We'll notify you if the mural is added to our site.
+                            We'll notify you if the mural is added.
                             </Form.Text>
                         </Form.Group>
     
                         <Form.Group>
                             <Form.File 
                                 id="submitFormControlFile" 
-                                label="Mural Photo" 
+                                label="Photo"
                                 name="image"
                                 ref={this.fileInput}
                                 onChange={this.handleFileChange}
-                                multiple
-                                accept="image/*" />
-                        </Form.Group>
-    
-                        <Form.Group controlId="exampleForm.ControlTextarea1">
-                            <Form.Label>Mural Description</Form.Label>
-                            <Form.Control 
-                                as="textarea" 
-                                rows="3" 
-                                placeholder="This description will be displayed on the info page for your mural."
-                                name="description"
-                                value={this.state.value} 
-                                onChange={this.handleChange}/>
-                        </Form.Group>
-    
-                        <Form.Group controlId="exampleForm.ControlText3">
-                            <Form.Label>Instagram</Form.Label>
-                            <Form.Control 
-                                type="text" 
-                                placeholder="Enter Instagram handle or link" 
-                                name="instagram"
-                                value={this.state.value} 
-                                onChange={this.handleChange}/>
+                                multiple 
+                                accept="image/*"/>
                         </Form.Group>
                         
                         <Form.Group>
                             <Form.Label>Location</Form.Label>
                             <MapPicker 
                                 onChange={this.handleLocationChange} 
-                                lng={this.state.mural.geometry.coordinates[0]} 
-                                lat={this.state.mural.geometry.coordinates[1]}/>
+                                lng={this.state.lng} 
+                                lat={this.state.lat}/>
                         </Form.Group>
-                        
-    
+
                         <Button variant="primary" type="submit">
                             Submit
                         </Button>
-
-                        
                     </Form>
-                    
-
                 </div>
-                
             );
         }
     }
+}
+
+export class PendingViewerEdit {
+
+}
+
+export class PendingArtistEdit {
+    
 }
 
 export default MuralEdit;
