@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Carousel } from 'react-bootstrap';
 import MuralEdit from './MuralEdit';
-// import MuralMap from './MuralMap';
+import MuralMap from './MuralMap';
 
 class MuralInfo extends Component {
     render() {
@@ -33,7 +33,7 @@ class MuralInfo extends Component {
 
                         {/* TO DO: add additional properties */}
                         <hr/>
-                        {/* <MuralMap coordinates={mural.geometry.coordinates} /> */}
+                        <MuralMap coordinates={mural.geometry.coordinates} />
                         <hr/>
                         <Link to={{
                             pathname: "/edit/" + mural.properties.id,
