@@ -185,13 +185,13 @@ app.post("/api/pendingartist", upload.array("image"), async function(req, res) {
     let mural = new PendingArtistMural({
         _id: id,
         properties: {
-            title: formData.title,
-            desc: formData.description,
             id: id.toHexString(),
             date: new Date(),
+            title: formData.title,
+            desc: formData.description,
             artist: formData.artist,
-            images: imageLinks,
             email: formData.email,
+            images: imageLinks,
             instagram: formData.instagram
         },
         geometry: {

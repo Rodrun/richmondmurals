@@ -29,29 +29,73 @@ Each Mural object follows the ![GeoJSON format](https://geojson.org/) with a few
 * `email`: (String) Email of submitter. REQUIRED.
 * `images`: (Array) String(s) of image URLs to display when viewing a mural on the client side.
 
-## Pending Mural
+## Pending Viewer Mural
 
-Pending murals are submitted through the client site. These are found in the `pending` collection.
+Pending murals are submitted through the client site. These are found in the `pendingViewer` collection.
 
-The following JSON format is used:
+Each PendingViewerMural object follows the ![GeoJSON format](https://geojson.org/) with a few required `properties` (and optional ones).
 
 ```json
 {
-	"title": "My Mural",
-	"desc": "My description",
-	"artist": "Artist name, contact info",
-	"email": "Submitter@email.net",
-	"images": ["https://image.com/myImage"],
-	"reject": false,
-	"notes": "admin notes"
+  "geometry": {
+    "type": "Point",
+    "coordinates": [73.6, 48.2]
+  },
+  "properties": {
+    "id": "5f43daab3b472d53cb05d083",
+    "date": "2020-08-28T13:17:56.409+00:00",
+    "title": "My Mural",
+    "email": "Submitter@email.net",
+    "images": ["https://image.com/myImage"],
+    "reject": false,
+    "notes": "admin notes"
+  }
 }
 ```
 
+* `id`: (String) MongoDB ObjectId of object. REQUIRED.
+* `date`: (Date) Date of mural submission. REQUIRED.
+* `title`: (String) Title of mural. REQUIRED.
+* `email`: (String) Email of submitter. REQUIRED.
+* `images`: (Array) String(s) of image URLs to display when viewing a mural on the client side.
+* `reject`: (Boolean) Rejected status.
+* `notes`: (String) Administrator notes.
+
+## Pending Artist Mural
+
+Pending murals are submitted through the client site. These are found in the `pendingArtist` collection.
+
+Each PendingArtistMural object follows the ![GeoJSON format](https://geojson.org/) with a few required `properties` (and optional ones).
+
+```json
+{
+  "geometry": {
+    "type": "Point",
+    "coordinates": [73.6, 48.2]
+  },
+  "properties": {
+    "id": "5f43daab3b472d53cb05d083",
+    "date": "2020-08-28T13:17:56.409+00:00",
+    "title": "My Mural",
+    "desc": "My description",
+    "artist": "Artist name, contact info",
+    "email": "Submitter@email.net",
+    "images": ["https://image.com/myImage"],
+    "instagram": "my_instagram",
+    "reject": false,
+    "notes": "admin notes"
+  }
+}
+```
+
+* `id`: (String) MongoDB ObjectId of object. REQUIRED.
+* `date`: (Date) Date of mural submission. REQUIRED.
 * `title`: (String) Title of mural. REQUIRED.
 * `desc`: (String) Description of mural. REQUIRED.
 * `artist`: (String) Name of artist & contact info.
 * `email`: (String) Email of submitter. REQUIRED.
 * `images`: (Array) String(s) of image URLs to display when viewing a mural on the client side.
+* `instagram`: (String) Artist instagram handle. 
 * `reject`: (Boolean) Rejected status.
 * `notes`: (String) Administrator notes.
 
