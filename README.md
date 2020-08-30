@@ -10,20 +10,26 @@ From the root directory.
 
 * Install: `yarn install`
 
+**Note:** Environment variable `URI` is necessary to connect to the database.
+
 ### Development
 
 * Run development server: `yarn run start`
 
-* All updates to client/* will compile automatically while running the server
+* All updates to frontend will compile automatically while running the server
 
 ### Production
-
-* Build static files: `cd client && yarn run build`
 
 * Push to master branch, Heroku will deploy automatically
 
 If for any reason you'd need to run a production server locally:
 
-* Build static files, then return to root directory
+* Build static files: `yarn build`
 
 * `yarn run server`
+
+### Testing
+
+* `yarn test`
+
+**Note:** Must connect to `testmondmurals` collection in the database, to prevent any accidental damage to the "production" collection. This is already enforced before any tests are executed.
