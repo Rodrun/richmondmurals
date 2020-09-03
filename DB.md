@@ -4,7 +4,7 @@
 
 An 'Active Mural' is a mural that is shown to the client on the map.  These are in the `murals` collection.
 
-Each Mural object follows the ![GeoJSON format](https://geojson.org/) with a few required `properties` (and optional ones).
+Each Mural object follows the ![GeoJSON format](https://geojson.org/) with a few required fields in `properties`.
 
 ```json
 {
@@ -18,96 +18,79 @@ Each Mural object follows the ![GeoJSON format](https://geojson.org/) with a few
     "desc": "My description",
     "artist": "My name, maybe contact info",
     "email": "Submitter@email.net",
-    "images": ["https://image.com/myImage"]
-  }
-}
-```
-
-* `title`: (String) Title of mural. REQUIRED.
-* `desc`: (String) Description of mural. REQUIRED.
-* `artist`: (String) Name of artist & contact info.
-* `email`: (String) Email of submitter. REQUIRED.
-* `images`: (Array) String(s) of image URLs to display when viewing a mural on the client side.
-
-## Pending Viewer Mural
-
-Pending murals are submitted through the client site. These are found in the `pendingViewer` collection.
-
-Each PendingViewerMural object follows the ![GeoJSON format](https://geojson.org/) with a few required `properties` (and optional ones).
-
-```json
-{
-  "geometry": {
-    "type": "Point",
-    "coordinates": [73.6, 48.2]
-  },
-  "properties": {
-    "id": "5f43daab3b472d53cb05d083",
-    "date": "2020-08-28T13:17:56.409+00:00",
-    "title": "My Mural",
-    "email": "Submitter@email.net",
+    "instagram": "artist_instagram",
     "images": ["https://image.com/myImage"],
-    "reject": false,
-    "notes": "admin notes"
+    "id": "............."
   }
 }
 ```
 
-* `id`: (String) MongoDB ObjectId of object. REQUIRED.
-* `date`: (Date) Date of mural submission. REQUIRED.
-* `title`: (String) Title of mural. REQUIRED.
-* `email`: (String) Email of submitter. REQUIRED.
-* `images`: (Array) String(s) of image URLs to display when viewing a mural on the client side.
-* `reject`: (Boolean) Rejected status.
-* `notes`: (String) Administrator notes.
+* `properties`: (Object):
+  * `title`: (String) Title of mural.
+  * `desc`: (String) Description of mural.
+  * `artist`: (String) Name of artist & contact info.
+  * `email`: (String) Email of submitter.
+  * `instagram`: (String) Artist instagram handle. 
+  * `images`: (Array) String(s) of image URLs to display when viewing a mural on the client side.4028347-2834729-2384
+  * `id`: (String) Mural ID.
 
-## Pending Artist Mural
+## Pending Mural
 
-Pending murals are submitted through the client site. These are found in the `pendingArtist` collection.
+Pending murals are submitted through the client site. These are found in the `pendingViewer` and `pendingArtist` collections, depending on which submission page was used.
 
-Each PendingArtistMural object follows the ![GeoJSON format](https://geojson.org/) with a few required `properties` (and optional ones).
+Each Pending Mural object follows the ![GeoJSON format](https://geojson.org/) with a few required fields in `properties`.
 
 ```json
 {
+  "type": "Feature",
   "geometry": {
     "type": "Point",
     "coordinates": [73.6, 48.2]
   },
   "properties": {
-    "id": "5f43daab3b472d53cb05d083",
     "date": "2020-08-28T13:17:56.409+00:00",
     "title": "My Mural",
     "desc": "My description",
-    "artist": "Artist name, contact info",
+    "artist": "My name, maybe contact info",
     "email": "Submitter@email.net",
+    "instagram": "artist_instagram",
     "images": ["https://image.com/myImage"],
-    "instagram": "my_instagram",
+    "id": ".............",
+    "uploader": "........",
     "reject": false,
-    "notes": "admin notes"
+    "notes": "yadda yadda yadda"
   }
 }
 ```
 
-* `id`: (String) MongoDB ObjectId of object. REQUIRED.
-* `date`: (Date) Date of mural submission. REQUIRED.
-* `title`: (String) Title of mural. REQUIRED.
-* `desc`: (String) Description of mural. REQUIRED.
-* `artist`: (String) Name of artist & contact info.
-* `email`: (String) Email of submitter. REQUIRED.
-* `images`: (Array) String(s) of image URLs to display when viewing a mural on the client side.
-* `instagram`: (String) Artist instagram handle. 
-* `reject`: (Boolean) Rejected status.
-* `notes`: (String) Administrator notes.
+* `properties`: (Object):
+  * `date`: (Date) Date of mural submission.
+  * `title`: (String) Title of mural.
+  * `desc`: (String) Description of mural.
+  * `artist`: (String) Name of artist & contact info.
+  * `email`: (String) Email of submitter.
+  * `instagram`: (String) Artist instagram handle. 
+  * `images`: (Array) String(s) of image URLs to display when viewing a mural on the client side.
+  * `id`: (String) Pending Mural ID.
+  * `uploader`: (String) Uploader username.
+  * `reject`: (Boolean) Rejected status. (Pending Mural)
+  * `notes`: (String) Administrator notes. (Pending Mural)
 
-## Logs
+## User
 
-A log entry follows a fairly simple JSON format:
+Registered user JSON:
+
 ```json
 {
-	"date": "YYYY-MM-DDTHH:mm:ss.sssZ",
-	"msg": "admin approved mural 123456"
+  "username": "joe",
+  "salt": "c9974d1eef5c9623cd10807f79c23eec5915ec",
+  "hash": "$2b$09$Yv9xAOABY5gSGg/f.bj2M.7BE.CiVcC6KeA7FT9exFJa0d12eh03S",
+  "perm": "user",
+  "name": "Joe Joe"
 }
 ```
 
-* `date`: (String) ISO 8601 time of log event.
-* `msg`: (String) Log message.
+* `username`: (String) Username.
+* `password`: (String) Hashed password.
+* `perm`: (String) Permision, either `"user"`, `"admin"`. Defaults to `"user"`.
+* `name`: (String) User's name.

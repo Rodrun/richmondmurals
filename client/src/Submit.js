@@ -18,7 +18,7 @@ class Submit extends Component {
                                     <Card.Text>
                                     Are you a muralist wanting to get your mural on this site?
                                     </Card.Text>
-                                    <a href="/submitartist" as={Link} to="/submitartist" className="btn btn-primary">Submit your mural</a>
+                                    <a href="/submit/artist" as={Link} to="/submit/artist" className="btn btn-primary">Submit your mural</a>
                                 </Card.Body>
                             </Card>
                         </Col>
@@ -30,7 +30,7 @@ class Submit extends Component {
                                     <Card.Text>
                                     See a mural you think should be on this site?
                                     </Card.Text>
-                                    <a href="/submitviewer" as={Link} to="/submitviewer" className="btn btn-primary">Submit a mural</a>
+                                    <a href="/submit/viewer" as={Link} to="/submit/viewer" className="btn btn-primary">Submit a mural</a>
                                 </Card.Body>
                             </Card>
                         </Col>

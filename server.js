@@ -1,280 +1,105 @@
-const express = require('express');
-const path = require('path');
-const mongoose = require("mongoose");
+const express = require("express");
+const path = require("path");
 const passport = require("passport");
-const LocalStrategy = require("passport-local");
-const bcrypt = require("bcrypt");
+const AnonymousStrategy = require("passport-anonymous").Strategy;
+const session = require('express-session');
+const cookieParser = require("cookie-parser");
+const { connect } = require("./db.js");
+const miscRoute = require("./routes.js");
+const User = require("./models/user.js");
+const morgan = require("morgan");
+
+// Configure server & connect to DB
 const app = express();
 
-const multer = require('multer');
-const upload = multer();
-const cloudinary = require('cloudinary').v2;
-const DataUriParser = require("datauri/parser");
-const parser = new DataUriParser();
+// // Pending Viewer Mural PUT
+// app.put("/api/pendingviewer/:id", upload.array("image"), async function(req, res) {
+//     console.log("PUT REQUEST");
+//     console.log("ID: ", req.params.id);
+//     const imageLinks = await uploadImages(req.files);
+//     const formData = req.body;
+//     let mural = {
+//         properties: {
+//             id: req.params.id,
+//             date: new Date(),
+//             title: formData.title,
+//             email: formData.email,
+//             images: imageLinks
+//         },
+//         geometry: {
+//             type: "Point",
+//             coordinates: [formData.lng, formData.lat]
+//         }
+//     };
+//     PendingViewerMural.findByIdAndUpdate(req.params.id, mural, {useFindAndModify: false},
+//         function (err, result) {
+//             if (err) {
+//                 console.error(err);
+//                 res.send(err);
+//             } else {
+//                 console.log(result);
+//                 res.send(result);
+//             }
+//         }
+//     );
+// });
+
+// // Pending Artist Mural PUT
+// app.put("/api/pendingartist/:id", upload.array("image"), async function(req, res) {
+//     console.log("PUT REQUEST");
+//     console.log("ID: ", req.params.id);
+//     const imageLinks = await uploadImages(req.files);
+//     const formData = req.body;
+//     let mural = {
+//         properties: {
+//             id: req.params.id,
+//             date: new Date(),
+//             title: formData.title,
+//             desc: formData.description,
+//             artist: formData.artist,
+//             email: formData.email,
+//             images: imageLinks,
+//             instagram: formData.instagram
+//         },
+//         geometry: {
+//             type: "Point",
+//             coordinates: [formData.lng, formData.lat]
+//         }
+//     };
+//     PendingArtistMural.findByIdAndUpdate(req.params.id, mural, {useFindAndModify: false},
+//         function (err, result) {
+//             if (err) {
+//                 console.error(err);
+//                 res.send(err);
+//             } else {
+//                 console.log(result);
+//                 res.send(result);
+//             }
+//         }
+//     );
+// });
 
 const port = process.env.PORT || 8080;
-app.listen(port, () => console.log(`Listening on port ${port}`));
-
-mongoose.pluralize(null); // Disable pluralizing of collection name
-
-// TODO: Move this section to separate file for organizational purposes 
-// Connect to DB
-const URI = process.env.URI || "";
-mongoose.connect(URI,
-    {
-        useUnifiedTopology: true,
-        useNewUrlParser: true
-    },
-    err => {
-        if (err) console.log(`mongoose error: ${err}`)
-    }
-);
-// DB Model for active murals
-const muralSchema = mongoose.Schema({
-    properties: Object,
-    geometry: Object,
-});
-var Mural = mongoose.model("murals", muralSchema);
-// DB Model for pending artist submitted murals
-const pendingArtistSchema = mongoose.Schema({
-    _id: mongoose.ObjectId,
-    properties: Object,
-    geometry: Object,
-});
-var PendingArtistMural = mongoose.model("pendingArtist", pendingArtistSchema);
-
-// DB Model for pending viewer submitted murals
-const pendingViewerSchema = mongoose.Schema({
-    _id: mongoose.ObjectId,
-    properties: Object,
-    geometry: Object,
-});
-var PendingViewerMural = mongoose.model("pendingViewer", pendingViewerSchema);
-
-// Admin User db model
-const adminSchema = mongoose.Schema({
-    username: String, // Username (should be) is an email
-    password: String // Hashed password, don't store cleartext passwords!
-});
-var Admin = mongoose.model("admin", adminSchema)
-
-passport.use(new LocalStrategy(function(username, password, done) {
-    // TODO: Add verifcation with bcrypt
-    return done(null, username);
+const secret = process.env.SECRET || "elephant trunk"; // Session secret should be provided in prod env
+app.use(session({
+    secret: secret,
+    resave: true,
+    saveUninitialized: true
 }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(cookieParser());
+app.use(express.json());
+app.use("/", miscRoute);
+app.use(morgan("tiny")); // Logging
+connect(process.env.URI || ""); // db
 
-// List GET route
-// This might not scale well, but for now it works fine
-// Potentially in the future require certain params to limit the list size
-app.get('/api/list', function(req, res) {
-    Mural.find(function(err, response) {
-        if (err) {
-            res.send({ err: err })
-        } else {
-            res.send({ murals: response })
-        }
-    })
-});
-
-// Mural GET route
-app.get("/api/mural/:id", function(req, res) {
-    Mural.find({ _id: req.params.id }, function(err, response) {
-        if (err) {
-            res.send({ err: err })
-        } else {
-            res.send({ mural: response })
-        }
-    })
-});
-
-// Pending Artist Mural list GET
-app.get("/api/pendingartist", function(req, res) {
-    PendingArtistMural.find(function(err, response) {
-        if (err) {
-            res.status(500).send({
-                msg: err
-            });
-        } else {
-            res.status(200).send({
-                list: response,
-                length: response.length
-            });
-        }
-    });
-});
-
-// Pending Viewer Mural list GET
-app.get("/api/pendingviewer", function(req, res) {
-    PendingViewerMural.find(function(err, response) {
-        if (err) {
-            console.log("ERROR ON THIS SIDE");
-            res.status(500).send({
-                msg: err
-            });
-        } else {
-            res.status(200).send({
-                list: response,
-                length: response.length
-            });
-        }
-    });
-});
-
-const uploader = async (file) => {
-    return await cloudinary.uploader.upload(file, (error, result) => {
-        if (error) console.log(error);
-    });
-};
-
-const formatFile = file => {
-    return parser.format(
-        path.extname(file.originalname).toString(),
-        file.buffer
-    ).content;
-};
-
-const uploadImages = async (files) => {
-    const imageLinks = [];
-    for (file of files) {
-        if (file.mimetype.split('/')[0] === "image") {
-            const formattedFile = formatFile(file);
-            const result = await uploader(formattedFile);
-            const url = result.url;
-            imageLinks.push(url);  
-        } 
-    }
-    return imageLinks;
-}
-
-// Mural viewer POST route
-app.post("/api/pendingviewer", upload.array("image"), async function(req, res) {
-    const imageLinks = await uploadImages(req.files);
-    const formData = req.body;
-    
-    const id = mongoose.Types.ObjectId();
-    let mural = new PendingViewerMural({
-        _id: id,
-        properties: {
-            id: id.toHexString(),
-            date: new Date(),
-            title: formData.title,
-            email: formData.email,
-            images: imageLinks
-        },
-        geometry: {
-            type: "Point",
-            coordinates: [formData.lng, formData.lat]
-        }
-    });
-
-    mural.save()
-        .then(doc => {
-            console.log(doc);
-        })
-        .catch(err => {
-            console.error(err);
-        })
-});
-
-// Mural artist POST route
-app.post("/api/pendingartist", upload.array("image"), async function(req, res) {
-    const imageLinks = await uploadImages(req.files);
-    const formData = req.body;
-
-    const id = mongoose.Types.ObjectId();
-    let mural = new PendingArtistMural({
-        _id: id,
-        properties: {
-            id: id.toHexString(),
-            date: new Date(),
-            title: formData.title,
-            desc: formData.description,
-            artist: formData.artist,
-            email: formData.email,
-            images: imageLinks,
-            instagram: formData.instagram
-        },
-        geometry: {
-            type: "Point",
-            coordinates: [formData.lng, formData.lat]
-        }
-    });
-
-    mural.save()
-        .then(doc => {
-            console.log(doc);
-        })
-        .catch(err => {
-            console.error(err);
-        })
-});
-
-// Pending Viewer Mural PUT
-app.put("/api/pendingviewer/:id", upload.array("image"), async function(req, res) {
-    console.log("PUT REQUEST");
-    console.log("ID: ", req.params.id);
-    const imageLinks = await uploadImages(req.files);
-    const formData = req.body;
-    let mural = {
-        properties: {
-            id: req.params.id,
-            date: new Date(),
-            title: formData.title,
-            email: formData.email,
-            images: imageLinks
-        },
-        geometry: {
-            type: "Point",
-            coordinates: [formData.lng, formData.lat]
-        }
-    };
-    PendingViewerMural.findByIdAndUpdate(req.params.id, mural, {useFindAndModify: false},
-        function (err, result) {
-            if (err) {
-                console.error(err);
-                res.send(err);
-            } else {
-                console.log(result);
-                res.send(result);
-            }
-        }
-    );
-});
-
-// Pending Artist Mural PUT
-app.put("/api/pendingartist/:id", upload.array("image"), async function(req, res) {
-    console.log("PUT REQUEST");
-    console.log("ID: ", req.params.id);
-    const imageLinks = await uploadImages(req.files);
-    const formData = req.body;
-    let mural = {
-        properties: {
-            id: req.params.id,
-            date: new Date(),
-            title: formData.title,
-            desc: formData.description,
-            artist: formData.artist,
-            email: formData.email,
-            images: imageLinks,
-            instagram: formData.instagram
-        },
-        geometry: {
-            type: "Point",
-            coordinates: [formData.lng, formData.lat]
-        }
-    };
-    PendingArtistMural.findByIdAndUpdate(req.params.id, mural, {useFindAndModify: false},
-        function (err, result) {
-            if (err) {
-                console.error(err);
-                res.send(err);
-            } else {
-                console.log(result);
-                res.send(result);
-            }
-        }
-    );
-});
+// Local login strategy
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+// Anonymous authentication strategy
+passport.use(new AnonymousStrategy());
 
 // Production-ready build
 if (process.env.NODE_ENV === "production") {
@@ -283,6 +108,11 @@ if (process.env.NODE_ENV === "production") {
     // Admin static file serving
     app.use("/admin/", express.static(path.join(__dirname, "admin", "build")));
     app.get("/admin/*", function(req, res) {
-        res.sendFile(path.join(__dirname, "admin", "index.html"))
+        res.sendFile(path.join(__dirname, "admin", "index.html"));
     });
 }
+
+// Finally, listen
+app.listen(port, () => console.log(`Listening on port ${port}`));
+
+module.exports = app;

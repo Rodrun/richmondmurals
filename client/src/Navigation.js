@@ -5,8 +5,7 @@ import Mapbox from './Mapbox.js';
 import About from './About.js';
 import Browse from './Browse.js';
 import Submit from './Submit.js';
-import SubmitArtistForm from './SubmitArtistForm.js';
-import SubmitViewerForm from './SubmitViewerForm.js';
+import SubmitMuralForm from './SubmitMuralForm.js';
 import Submitted from './Submitted.js';
 import Error from './Error.js';
 import MuralInfo from './MuralInfo.js';
@@ -25,11 +24,6 @@ class Navigation extends Component {
                         <Nav.Link as={Link} to="/submit">Submit a Mural</Nav.Link>
                         
                     </Nav>
-
-                    {/* TO DO: want link in navbar? */}
-                    {/* <Nav className="ml-auto">
-                        <Nav.Link as={Link} to="/login">Artist Login</Nav.Link>
-                    </Nav> */}
                     
                     </Navbar.Collapse>
                 </Navbar>
@@ -38,8 +32,7 @@ class Navigation extends Component {
                     <Route exact path="/about" component={About}/>
                     <Route exact path="/browse" component={Browse}/>
                     <Route exact path="/submit" component={Submit}/>
-                    <Route exact path="/submitartist" component={SubmitArtistForm}/>
-                    <Route exact path="/submitviewer" component={SubmitViewerForm}/>
+                    <Route exact path="/submit/:type" component={SubmitMuralForm}/>
                     <Route exact path="/thankyou" component={Submitted}/>
                     <Route exact path="/error" component={Error}/>
                     <Route path="/mural/:id" component={MuralInfo}/>

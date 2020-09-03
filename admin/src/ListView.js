@@ -97,7 +97,7 @@ export class PendingList extends Component {
     }
 
     callBackendAPI = async () => {
-        const response = await fetch("/api/pending" + this.state.type);
+        const response = await fetch("/api/pending/" + this.state.type);
         const body = await response.json();
         console.log(body);
 

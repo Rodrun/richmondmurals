@@ -79,7 +79,7 @@ class MuralEdit extends Component {
         formData.append("lat", this.state.lat);
 
         if (this.state.type === "viewer") {
-            const response = await fetch('/api/pendingviewer/' + this.state.id, {
+            const response = await fetch('/api/pending/viewer/' + this.state.id, {
                 method: 'PUT',
                 body: formData
             });
@@ -92,7 +92,7 @@ class MuralEdit extends Component {
             formData.append('artist', this.state.artist);
             formData.append("description", this.state.description);
             formData.append("instagram", this.state.instagram);
-            const response = await fetch('/api/pendingartist/' + this.state.id, {
+            const response = await fetch('/api/pending/artist/' + this.state.id, {
                 method: 'PUT',
                 body: formData
             });

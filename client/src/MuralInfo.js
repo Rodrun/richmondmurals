@@ -23,7 +23,7 @@ class MuralInfo extends Component {
 
     callBackendAPI = async () => {
         const id = this.props.match.params.id;
-        const response = await fetch('/api/mural/' + id);
+        const response = await fetch('/api/list/' + id);
         const body = await response.json();
 
         if (response.status !== 200) {
