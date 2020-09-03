@@ -1,4 +1,8 @@
 const validate = require("jsonschema").validate;
+const path = require("path");
+const cloudinary = require('cloudinary').v2;
+const DataUriParser = require("datauri/parser");
+const parser = new DataUriParser();
 const { PendingArtistMural, PendingViewerMural } = require("./models/mural.js");
 
 const GeoJSONSchema = {
@@ -140,4 +144,25 @@ exports.isAdmin = function(req, res, next) {
         }
     }
     res.sendStatus(403);
+};
+
+
+/**
+ * Upload files to Cloudinary image hosting database.
+ */
+exports.uploadImages = async (files) => {
+    const imageLinks = [];
+    for (file of files) {
+        if (file.mimetype.split('/')[0] === "image") {
+            const formattedFile = parser.format(
+                path.extname(file.originalname).toString(),
+                file.buffer
+            ).content;
+            const result = await cloudinary.uploader.upload(formattedFile, (error) => {
+                if (error) console.log(error);
+            });
+            imageLinks.push(result.url);  
+        } 
+    }
+    return imageLinks;
 };

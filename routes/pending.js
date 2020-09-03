@@ -1,44 +1,9 @@
 // Pending Murals routes
 const router = require("express").Router();
-const { getPendingType, isLoggedIn, validateMural } = require("../util.js");
-
-
-// TO DO: how to organize this
-const path = require("path");
+const { getPendingType, isLoggedIn, validateMural, uploadImages } = require("../util.js");
 const mongoose = require("mongoose");
 const multer = require('multer');
 const upload = multer();
-const cloudinary = require('cloudinary').v2;
-const DataUriParser = require("datauri/parser");
-const parser = new DataUriParser();
-
-
-const uploader = async (file) => {
-    return await cloudinary.uploader.upload(file, (error, result) => {
-        if (error) console.log(error);
-    });
-};
-
-const formatFile = file => {
-    return parser.format(
-        path.extname(file.originalname).toString(),
-        file.buffer
-    ).content;
-};
-
-const uploadImages = async (files) => {
-    const imageLinks = [];
-    for (file of files) {
-        if (file.mimetype.split('/')[0] === "image") {
-            const formattedFile = formatFile(file);
-            const result = await uploader(formattedFile);
-            const url = result.url;
-            imageLinks.push(url);  
-        } 
-    }
-    return imageLinks;
-}
-// END TO DO
 
 // Pending Mural list GET
 router.use("/:type", getPendingType);
@@ -78,10 +43,10 @@ router.post("/:type",
                 id: id.toHexString(),
                 date: new Date(),
                 title: formData.title,
-                desc: formData.description || "",
-                artist: formData.artist || "",
+                desc: formData.description,
+                artist: formData.artist,
                 email: formData.email,
-                instagram: formData.instagram || "",
+                instagram: formData.instagram,
                 images: imageLinks,
                 uploader: "anonymous uploader",
                 notes: "",
@@ -107,7 +72,6 @@ router.post("/:type",
         }
 
         let pMural = new req.type(mural);
-
         try {
             const posted = await pMural.save();
             res.status(201).send(posted);
