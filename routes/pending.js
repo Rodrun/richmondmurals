@@ -43,7 +43,7 @@ router.post("/:type",
                 id: id.toHexString(),
                 date: new Date(),
                 title: formData.title,
-                desc: formData.description,
+                desc: formData.desc,
                 artist: formData.artist,
                 email: formData.email,
                 instagram: formData.instagram,
@@ -61,13 +61,12 @@ router.post("/:type",
         // Validate
         const validation = validateMural(mural)
         if (!validation.valid) {
-            console.log("NOT VALID");
             res.status(400).send({ error: validation.errors });
             return;
         }
 
-        // Properly assign uploader value
-        if (req.user) { // Existing user
+        // Assign uploader value if existing user
+        if (req.user) { 
             mural.properties.uploader = req.user.username;
         }
 
@@ -107,7 +106,8 @@ router.get("/:type/:id",
 
 // Pending Mural individual PUT
 router.put("/:type/:id",
-    isLoggedIn,
+    // isLoggedIn, // TO DO: add back in
+    upload.array("image"),
     async function(req, res) {
         if (!req.type || !req.params.id) {
             res.sendStatus(404);
@@ -122,21 +122,44 @@ router.put("/:type/:id",
                 return;
             }
 
-            // Validate request
-            const validation = validateMural(req.body);
-            if (validation.valid && req.body) {
-                // Ensure id and uploader fields are not modified
-                req.body._id = req.params.id;
-                req.body.properties.id = req.params.id;
-                req.body.properties.uploader = doc.properties.uploader;
-                // Don't allow editing of reject & notes field unless admin
-                if (req.user.perm != "admin") {
-                    req.body.properties.reject = doc.properties.reject;
-                    req.body.properties.admin = doc.properties.admin;
+            // Upload images to Cloudinary
+            const imageLinks = await uploadImages(req.files);
+            const formData = req.body;
+
+            // Create JSON object using form data
+            let mural = {
+                type: "Feature",
+                properties: {
+                    date: new Date(),
+                    title: formData.title,
+                    desc: formData.desc,
+                    artist: formData.artist,
+                    email: formData.email,
+                    instagram: formData.instagram,
+                    images: imageLinks,
+                    id: req.params.id,
+                    uploader: doc.properties.uploader,
+                    reject: formData.reject === "reject",
+                    notes: formData.notes
+                },
+                geometry: {
+                    type: "Point",
+                    coordinates: [formData.lng, formData.lat]
                 }
+            };
+
+            // Validate request
+            const validation = validateMural(mural);
+            if (validation.valid && mural) {
+                // Don't allow editing of reject & notes field unless admin
+                // TO DO: add back in
+                // if (req.user.perm != "admin") {
+                //     mural.properties.reject = doc.properties.reject;
+                //     mural.properties.admin = doc.properties.admin;
+                // }
 
                 const nDoc = await req.type.findByIdAndUpdate(req.params.id,
-                    req.body,
+                    mural,
                     {
                         lean: true,
                         new: true,

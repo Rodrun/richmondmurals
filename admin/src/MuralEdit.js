@@ -10,32 +10,21 @@ class MuralEdit extends Component {
         super(props);
         const mural = this.props.location.state.mural;
         const type = this.props.location.state.type;
-        if (type === "viewer") {
-            this.state = {
-                id: mural.properties.id,
-                title: mural.properties.title,
-                email: mural.properties.email,
-                type: type,
-                redirect: false,
-                error: false,
-                lng: mural.geometry.coordinates[0],
-                lat: mural.geometry.coordinates[1],
-            };
-        } else {
-            this.state = {
-                id: mural.properties.id,
-                title: mural.properties.title,
-                email: mural.properties.email,
-                description: mural.properties.description,
-                artist: mural.properties.artist,
-                instagram: mural.properties.instagram,
-                type: type,
-                redirect: false,
-                error: false,
-                lng: mural.geometry.coordinates[0],
-                lat: mural.geometry.coordinates[1],
-            };
-        }
+        this.state = {
+            id: mural.properties.id,
+            title: mural.properties.title,
+            email: mural.properties.email,
+            desc: mural.properties.desc,
+            artist: mural.properties.artist,
+            instagram: mural.properties.instagram,
+            reject: mural.properties.reject,
+            notes: mural.properties.notes,
+            type: type,
+            redirect: false,
+            error: false,
+            lng: mural.geometry.coordinates[0],
+            lat: mural.geometry.coordinates[1],
+        };
         
         this.fileInput = React.createRef();
         this.handleChange = this.handleChange.bind(this);
@@ -44,7 +33,7 @@ class MuralEdit extends Component {
 
     handleChange(event) {
         const target = event.target;
-        const value = target.value;
+        const value = target.type === 'checkbox' ? target.checked: target.value;
         const name = target.name;
         this.setState({
             [name]: value
@@ -68,40 +57,31 @@ class MuralEdit extends Component {
     }
 
     handleSubmit = async (event) => {
-        this.setState({redirect: true});
+        event.preventDefault();
         var formData = new FormData();
         formData.append('title', this.state.title);
         formData.append('email', this.state.email);
         for (const index in this.fileInput.current.files) {
             formData.append("image", this.fileInput.current.files[index]);
         }
+        formData.append('artist', this.state.artist);
+        formData.append("desc", this.state.desc);
+        formData.append("instagram", this.state.instagram);
+        // TO DO: handle images
+        formData.append("reject", this.state.reject ? 'reject' : 'accept');
+        formData.append("notes", this.state.notes);
         formData.append("lng", this.state.lng);
         formData.append("lat", this.state.lat);
-
-        if (this.state.type === "viewer") {
-            const response = await fetch('/api/pending/viewer/' + this.state.id, {
-                method: 'PUT',
-                body: formData
-            });
-            if (response.status !== 200) {
-                this.setState({error: true});
-                throw Error(response.statusText);
-                
-            }
-        } else {
-            formData.append('artist', this.state.artist);
-            formData.append("description", this.state.description);
-            formData.append("instagram", this.state.instagram);
-            const response = await fetch('/api/pending/artist/' + this.state.id, {
-                method: 'PUT',
-                body: formData
-            });
-            if (response.status !== 200) {
-                this.setState({error: true});
-                throw Error(response.statusText);
-                
-            }
+        const response = await fetch('/api/pending/' + this.state.type + '/' + this.state.id, {
+            method: 'PUT',
+            body: formData
+        });
+        if (response.status !== 200) {
+            this.setState({error: true});
+            throw Error(response.statusText);
+            
         }
+        this.setState({redirect: true});
     }
 
     render() {
@@ -122,23 +102,20 @@ class MuralEdit extends Component {
                             <Form.Control 
                                 type="text" 
                                 name="title"
-                                placeholder="Enter a brief description. For example, 'Blue Owl Mural'." 
-                                value={this.state.value} 
-                                defaultValue={this.state.title}
+                                placeholder="Enter mural title" 
+                                value={this.state.title} 
                                 onChange={this.handleChange}/>
                         </Form.Group>
                     <Form onSubmit={this.handleSubmit} encType="multipart/form-data">
                         <Form.Group controlId="formBasicEmail">
-                            <Form.Label>Your Email address</Form.Label>
+                            <Form.Label>Submitter Email address</Form.Label>
                             <Form.Control 
                                 type="email" 
                                 name="email" 
-                                placeholder="Enter email" 
-                                value={this.state.value} 
-                                defaultValue={this.state.email}
+                                placeholder="Enter submitter email" 
+                                value={this.state.email} 
                                 onChange={this.handleChange}/>
                             <Form.Text className="text-muted">
-                            We'll notify you if the mural is added.
                             </Form.Text>
                         </Form.Group>
     
@@ -153,42 +130,33 @@ class MuralEdit extends Component {
                                 accept="image/*"/>
                         </Form.Group>
 
-                        {this.state.type === "artist" ? 
-                            <div>
-                            <Form.Group controlId="exampleForm.ControlText2">
-                                <Form.Label>Artist Name</Form.Label>
-                                <Form.Control 
-                                    type="text" 
-                                    name="artist"
-                                    value={this.state.value} 
-                                    defaultValue={this.state.artist}
-                                    onChange={this.handleChange}/>
-                            </Form.Group>
-                            <Form.Group controlId="exampleForm.ControlTextarea1">
-                                <Form.Label>Mural Description</Form.Label>
-                                <Form.Control 
-                                    as="textarea" 
-                                    rows="3" 
-                                    placeholder="This description will be displayed on the info page for your mural."
-                                    name="description"
-                                    value={this.state.value} 
-                                    defaultValue={this.state.description}
-                                    onChange={this.handleChange}/>
-                            </Form.Group>
-                            <Form.Group controlId="exampleForm.ControlText3">
-                                <Form.Label>Instagram</Form.Label>
-                                <Form.Control 
-                                    type="text" 
-                                    placeholder="Enter Instagram handle or link" 
-                                    name="instagram"
-                                    value={this.state.value} 
-                                    onChange={this.handleChange}/>
-                            </Form.Group>
-                            
-                            </div> :
-                            <p></p>
-                        }
-                        
+                        <Form.Group controlId="exampleForm.ControlText2">
+                            <Form.Label>Artist Name</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                name="artist"
+                                value={this.state.artist} 
+                                onChange={this.handleChange}/>
+                        </Form.Group>
+                        <Form.Group controlId="exampleForm.ControlTextarea1">
+                            <Form.Label>Mural Description</Form.Label>
+                            <Form.Control 
+                                as="textarea" 
+                                rows="3" 
+                                placeholder="This description will be displayed on the info page for the mural."
+                                name="desc"
+                                value={this.state.desc} 
+                                onChange={this.handleChange}/>
+                        </Form.Group>
+                        <Form.Group controlId="exampleForm.ControlText3">
+                            <Form.Label>Instagram</Form.Label>
+                            <Form.Control 
+                                type="text" 
+                                placeholder="Enter Instagram handle or link" 
+                                name="instagram"
+                                value={this.state.instagram} 
+                                onChange={this.handleChange}/>
+                        </Form.Group>
                         <Form.Group>
                             <Form.Label>Location</Form.Label>
                             <MapPicker 
@@ -196,6 +164,24 @@ class MuralEdit extends Component {
                                 lng={this.state.lng} 
                                 lat={this.state.lat}/>
                         </Form.Group>
+                        <Form.Group controlId="formBasicCheckbox">
+                            <Form.Check type="checkbox" 
+                                checked={this.state.reject}
+                                onChange={this.handleChange}
+                                name="reject"
+                                label="Reject mural" />
+                        </Form.Group>
+                        <Form.Group controlId="exampleForm.ControlTextarea2">
+                            <Form.Label>Admin Notes</Form.Label>
+                            <Form.Control 
+                                as="textarea" 
+                                rows="3" 
+                                placeholder="Enter administrative notes"
+                                name="notes"
+                                value={this.state.notes} 
+                                onChange={this.handleChange}/>
+                        </Form.Group>
+                        
 
                         <Button variant="primary" type="submit">
                             Save Changes

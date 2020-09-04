@@ -55,7 +55,9 @@ class MuralInfo extends Component {
                         <p>{this.state.mural.properties.desc}</p>
                         <hr/>
                         <h5>Artist: {this.state.mural.properties.artist}</h5> 
-                        {/* TO DO: add additional properties */}
+                        {this.state.mural.properties.instagram ?  <h5>Artist Instagram: 
+                            {this.state.mural.properties.artist}</h5> : 
+                            <div/>}
                         <hr/>
                         <MuralMap coordinates={this.state.mural.geometry.coordinates} />
                         <hr/>

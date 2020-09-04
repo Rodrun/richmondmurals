@@ -9,7 +9,7 @@ class SubmitMuralForm extends Component {
         this.state = {
             type: props.match.params.type,
             title: '',
-            description: '',
+            desc: '',
             artist: '',
             email: '',
             instagram: '',
@@ -49,7 +49,7 @@ class SubmitMuralForm extends Component {
     }
 
     handleSubmit = async (event) => {
-        this.setState({redirect: true});
+        event.preventDefault();
         var formData = new FormData();
         formData.append('title', this.state.title);
         formData.append('email', this.state.email);
@@ -57,7 +57,7 @@ class SubmitMuralForm extends Component {
         for (const index in this.fileInput.current.files) {
             formData.append("image", this.fileInput.current.files[index]);
         }
-        formData.append("description", this.state.description);
+        formData.append("desc", this.state.desc);
         formData.append("instagram", this.state.instagram);
         formData.append("lng", this.state.lng);
         formData.append("lat", this.state.lat);
@@ -71,6 +71,7 @@ class SubmitMuralForm extends Component {
             this.setState({error: true});
             throw Error(response.statusText);
         }
+        this.setState({redirect: true});
     }
     
     render() {
@@ -93,7 +94,7 @@ class SubmitMuralForm extends Component {
                                 type="text" 
                                 name="title"
                                 placeholder={this.state.type === 'viewer' ? "Enter a brief description. For example, 'Blue Owl Mural'." : "Enter title"}
-                                value={this.state.value} 
+                                value={this.state.title} 
                                 onChange={this.handleChange}/>
                         </Form.Group>
     
@@ -103,7 +104,7 @@ class SubmitMuralForm extends Component {
                                 type="email" 
                                 name="email"
                                 placeholder="Enter email"
-                                value={this.state.value} 
+                                value={this.state.email} 
                                 onChange={this.handleChange} />
                             <Form.Text className="text-muted">
                             We'll notify you if the mural is added to our site.
@@ -129,7 +130,7 @@ class SubmitMuralForm extends Component {
                                         type="text" 
                                         name="artist"
                                         placeholder="Enter artist name"
-                                        value={this.state.value} 
+                                        value={this.state.artist} 
                                         onChange={this.handleChange}/>
                                 </Form.Group>
                                 <Form.Group controlId="exampleForm.ControlTextarea1">
@@ -138,8 +139,8 @@ class SubmitMuralForm extends Component {
                                         as="textarea" 
                                         rows="3" 
                                         placeholder="This description will be displayed on the info page for your mural."
-                                        name="description"
-                                        value={this.state.value} 
+                                        name="desc"
+                                        value={this.state.desc} 
                                         onChange={this.handleChange}/>
                                 </Form.Group>
             
@@ -149,7 +150,7 @@ class SubmitMuralForm extends Component {
                                         type="text" 
                                         placeholder="Enter artist Instagram handle or link" 
                                         name="instagram"
-                                        value={this.state.value} 
+                                        value={this.state.instagram} 
                                         onChange={this.handleChange}/>
                                 </Form.Group>
                             </div> :

@@ -87,7 +87,6 @@ const GeoJSONSchema = {
  * @returns Object with "error" array and "valid" boolean.
  */
 exports.validateMural = function(geojson) {
-    console.log("geojson: ", geojson); // TO DO: REMOVE
     return validate(geojson, GeoJSONSchema);
 };
 
@@ -149,6 +148,8 @@ exports.isAdmin = function(req, res, next) {
 
 /**
  * Upload files to Cloudinary image hosting database.
+ * @param {Array} files Array of files from submission form
+ * @returns Array of Cloudinary image links
  */
 exports.uploadImages = async (files) => {
     const imageLinks = [];

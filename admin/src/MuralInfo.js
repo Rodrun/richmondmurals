@@ -6,6 +6,7 @@ import MuralMap from './MuralMap';
 class MuralInfo extends Component {
     render() {
         let mural = this.props.location.state.mural;
+        console.log(mural);
         return (
             <div className="pageContainer">
                 {mural ? 
@@ -29,10 +30,13 @@ class MuralInfo extends Component {
                         <hr/>
                         <h5>Artist: {mural.properties.artist}</h5>
                         <h5>Instagram: {mural.properties.instagram}</h5>
+                        <h5>Submitter email: {mural.properties.email}</h5>
 
-                        {/* TO DO: add additional properties */}
                         <hr/>
                         <MuralMap coordinates={mural.geometry.coordinates} />
+                        <hr/>
+                        <h5>Marked as rejected: {mural.properties.reject ? "Yes" : "No"}</h5>
+                        <h5>Admin Notes: {mural.properties.notes}</h5>
                         <hr/>
                         <Link to={{
                             pathname: "/edit/" + mural.properties.id,
