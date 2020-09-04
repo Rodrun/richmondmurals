@@ -1,6 +1,6 @@
 // Pending Murals routes
 const router = require("express").Router();
-const { getPendingType, isLoggedIn, validateMural, uploadImages } = require("../util.js");
+const { getPendingType, isLoggedIn, validateMural, uploadImages, isAdmin } = require("../util.js");
 const mongoose = require("mongoose");
 const multer = require('multer');
 const upload = multer();
@@ -174,6 +174,29 @@ router.put("/:type/:id",
             console.log("--->PENDING MURAL INDIVIDUAL PUT ERROR: " + error + "\n" + error.stack);
             res.status(500).send({ error: error });
         }
+    }
+);
+
+// Pending Mural individual DELETE
+router.delete("/:type/:id",
+    // isLoggedIn, // TO DO: add in
+    // isAdmin, // TO DO: add in
+    async function(req, res) {
+        if (!req.type || !req.params.id) {
+            res.sendStatus(404);
+            return;
+        }
+        try {
+            req.type.findByIdAndDelete(req.params.id, function (err) {
+                if (err) {
+                    console.log("--->PENDING MURAL DELETION ERROR: " + err);
+                } else {
+                    res.sendStatus(200);
+                }
+            });
+        } catch (error) {
+            res.status(500).send({ error: error });
+        }   
     }
 );
 

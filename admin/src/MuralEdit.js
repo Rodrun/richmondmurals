@@ -88,12 +88,10 @@ class MuralEdit extends Component {
         if (this.state.redirect) {
             if (this.state.error) {
                 return (<Redirect to="/error" />);
-            }
-            else {
+            } else {
                 return (<Redirect to={"/pending" + this.state.type} />);
             }
-        }
-        else {
+        } else {
             return (
                 <div className="pageContainer">
                     <h2>Edit Pending {this.state.type.charAt(0).toUpperCase() + this.state.type.slice(1)} Mural</h2>

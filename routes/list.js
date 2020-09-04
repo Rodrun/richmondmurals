@@ -2,6 +2,7 @@
 const router = require("express").Router();
 const { Mural } = require("../models/mural.js");
 const { validateMural, isLoggedIn, isAdmin } = require("../util.js");
+const mongoose = require("mongoose");
 
 // List GET
 router.get("/", function(req, res) {
@@ -16,12 +17,16 @@ router.get("/", function(req, res) {
 
 // Mural POST
 router.post("/",
-    isLoggedIn,
-    isAdmin,
+    // isLoggedIn,
+    // isAdmin,
     async function(req, res) {
+        console.log('MURAL POST');
+        console.log('REQ.BODY: ', req.body);
         // Validate data
         const validation = validateMural(req.body);
         if (validation.valid) {
+            // Add _id field 
+            req.body._id = mongoose.Types.ObjectId(req.body.properties.id);
             // Remove unnecessary fields
             delete req.body.properties.reject;
             delete req.body.properties.notes;
@@ -79,5 +84,28 @@ router.get("/:id", async function(req, res) {
         res.status(500).send({ error: error });
     }
 });
+
+// Individual Mural DELETE
+router.delete("/:id",
+    // isLoggedIn, // TO DO: add in
+    // isAdmin, // TO DO: add in
+    async function(req, res) {
+        if (!req.params.id) {
+            res.sendStatus(404);
+            return;
+        }
+        try {
+            Mural.findByIdAndDelete(req.params.id, function (err) {
+                if (err) {
+                    console.log("--->PENDING MURAL DELETION ERROR: " + err);
+                } else {
+                    res.sendStatus(200);
+                }
+            });
+        } catch (error) {
+            res.status(500).send({ error: error });
+        }
+    }
+);
 
 module.exports = router;
