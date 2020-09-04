@@ -16,7 +16,10 @@ describe("util", function() {
                 "desc": "My description",
                 "artist": "My name, maybe contact info",
                 "email": "Submitter@email.net",
-                "images": ["https://image.com/myImage"],
+                "images": [{
+                    id: "cloudinary_public_id",
+                    url: "https://image.com/myImage"
+                }],
                 "id": ".............",
                 "reject": false,
                 "notes": "yadda yadda yadda"
@@ -38,7 +41,10 @@ describe("util", function() {
                 "desc": "My description",
                 "artist": "My name, maybe contact info",
                 "email": "Submitter@email.net",
-                "images": ["https://image.com/myImage"],
+                "images": [{
+                    id: "cloudinary_public_id",
+                    url: "https://image.com/myImage"
+                }],
                 "id": ".............",
                 "reject": false,
                 "notes": "yadda yadda yadda"

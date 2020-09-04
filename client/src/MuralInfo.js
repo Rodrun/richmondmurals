@@ -15,7 +15,7 @@ class MuralInfo extends Component {
         this.callBackendAPI()
             .then(res => {
                 this.setState({
-                    mural: res.mural[0]
+                    mural: res
                 });
             });
         
@@ -44,7 +44,7 @@ class MuralInfo extends Component {
                                 return (<Carousel.Item>
                                     <img
                                     className="d-block w-100"
-                                    src={image}
+                                    src={image.url}
                                     alt="First slide"
                                     />
                                 </Carousel.Item>);
@@ -55,8 +55,7 @@ class MuralInfo extends Component {
                         <p>{this.state.mural.properties.desc}</p>
                         <hr/>
                         <h5>Artist: {this.state.mural.properties.artist}</h5> 
-                        {this.state.mural.properties.instagram ?  <h5>Artist Instagram: 
-                            {this.state.mural.properties.artist}</h5> : 
+                        {this.state.mural.properties.instagram ?  <h5>Artist Instagram: {this.state.mural.properties.instagram}</h5> : 
                             <div/>}
                         <hr/>
                         <MuralMap coordinates={this.state.mural.geometry.coordinates} />

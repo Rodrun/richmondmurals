@@ -34,6 +34,7 @@ class Submit extends Component {
                     <Container>
                         <Row>
                             {this.state.murals.map((mural, i) => {
+                                console.log(mural);
                                 return (
                                     <Col key={i} xs={12} md={6} lg={4} style={{"margin-bottom": "30px"}}>
                                         <Card className="h-100">
@@ -44,7 +45,7 @@ class Submit extends Component {
                                                         "overflow": "hidden", 
                                                         "object-fit": "cover"}} 
                                                     variant="top" 
-                                                    src={mural.properties.images[0]} />
+                                                    src={mural.properties.images[0].url} />
                                                 <Card.Body>
                                                     <Card.Title
                                                         style={{"color": "black"}}>

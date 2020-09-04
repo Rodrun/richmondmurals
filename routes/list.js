@@ -1,7 +1,7 @@
 // Active Murals list routes
 const router = require("express").Router();
 const { Mural } = require("../models/mural.js");
-const { validateMural, isLoggedIn, isAdmin } = require("../util.js");
+const { validateMural, isLoggedIn, deleteImage, isAdmin } = require("../util.js");
 const mongoose = require("mongoose");
 
 // List GET
@@ -20,8 +20,6 @@ router.post("/",
     // isLoggedIn,
     // isAdmin,
     async function(req, res) {
-        console.log('MURAL POST');
-        console.log('REQ.BODY: ', req.body);
         // Validate data
         const validation = validateMural(req.body);
         if (validation.valid) {
@@ -95,10 +93,16 @@ router.delete("/:id",
             return;
         }
         try {
-            Mural.findByIdAndDelete(req.params.id, function (err) {
+            Mural.findByIdAndDelete(req.params.id, async function (err) {
                 if (err) {
-                    console.log("--->PENDING MURAL DELETION ERROR: " + err);
+                    console.log("--->MURAL DELETION ERROR: " + err);
                 } else {
+                    if (req.body.images) {
+                        // Delete images from cloudinary database
+                        for (let obj in req.body.images) {
+                            await deleteImage(req.body.images[obj].id);
+                        }
+                    }
                     res.sendStatus(200);
                 }
             });

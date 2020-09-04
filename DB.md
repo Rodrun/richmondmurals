@@ -19,7 +19,10 @@ Each Mural object follows the ![GeoJSON format](https://geojson.org/) with a few
     "artist": "My name, maybe contact info",
     "email": "Submitter@email.net",
     "instagram": "artist_instagram",
-    "images": ["https://image.com/myImage"],
+    "images": [{
+				"id": "cloudinary_public_id",
+				"url": "https://image.com/myImage"
+			}],
     "id": "............."
   }
 }
@@ -31,7 +34,9 @@ Each Mural object follows the ![GeoJSON format](https://geojson.org/) with a few
   * `artist`: (String) Name of artist & contact info.
   * `email`: (String) Email of submitter.
   * `instagram`: (String) Artist instagram handle. 
-  * `images`: (Array) String(s) of image URLs to display when viewing a mural on the client side.4028347-2834729-2384
+  * `images`: (Array) of (Objects):
+     * `id`: (String) Cloudinary public_id for image
+     * `url`: (String) Image URL to display when viewing a mural on the client side.
   * `id`: (String) Mural ID.
 
 ## Pending Mural
@@ -54,7 +59,10 @@ Each Pending Mural object follows the ![GeoJSON format](https://geojson.org/) wi
     "artist": "My name, maybe contact info",
     "email": "Submitter@email.net",
     "instagram": "artist_instagram",
-    "images": ["https://image.com/myImage"],
+    "images": [{
+				"id": "cloudinary_public_id",
+				"url": "https://image.com/myImage"
+			}],
     "id": ".............",
     "uploader": "........",
     "reject": false,
@@ -70,7 +78,9 @@ Each Pending Mural object follows the ![GeoJSON format](https://geojson.org/) wi
   * `artist`: (String) Name of artist & contact info.
   * `email`: (String) Email of submitter.
   * `instagram`: (String) Artist instagram handle. 
-  * `images`: (Array) String(s) of image URLs to display when viewing a mural on the client side.
+  * `images`: (Array) of (Objects):
+     * `id`: (String) Cloudinary public_id for image
+     * `url`: (String) Image URL
   * `id`: (String) Pending Mural ID.
   * `uploader`: (String) Uploader username.
   * `reject`: (Boolean) Rejected status. (Pending Mural)

@@ -139,7 +139,10 @@ describe("Backend: Active Murals", function() {
                             "desc": "My description",
                             "artist": "My name, maybe contact info",
                             "email": "Submitter@email.net",
-                            "images": ["https://image.com/myImage"],
+                            "images": [{
+                                id: "cloudinary_public_id",
+                                url: "https://image.com/myImage"
+                            }],
                             "id": "TEST",
                             "uploader": "TEST",
                             "reject": false,
@@ -209,7 +212,10 @@ describe("Backend: Pending Murals", function() {
                 "desc": "My description",
                 "artist": "My name, maybe contact info",
                 "email": "Submitter@email.net",
-                "images": ["https://image.com/myImage"],
+                "images": [{
+                    id: "cloudinary_public_id",
+                    url: "https://image.com/myImage"
+                }],
                 "id": "This should be _id after post",
                 "uploader": "........",
                 "reject": true,
@@ -255,7 +261,10 @@ describe("Backend: Pending Murals", function() {
                     "desc": "My description",
                     "artist": "My name, maybe contact info",
                     "email": "Submitter@email.net",
-                    "images": ["https://image.com/myImage"],
+                    "images": [{
+                        id: "cloudinary_public_id",
+                        url: "https://image.com/myImage"
+                    }],
                     "id": id,
                     "uploader": TEST_ADMIN_USERNAME,
                     "reject": false,
@@ -310,7 +319,10 @@ describe("Backend: Pending Murals", function() {
                     "desc": "My description",
                     "artist": "My name, maybe contact info",
                     "email": "Submitter@email.net",
-                    "images": ["https://image.com/myImage"],
+                    "images": [{
+                        id: "cloudinary_public_id",
+                        url: "https://image.com/myImage"
+                    }],
                     "id": "This should be _id after post",
                     "uploader": "This should be replaced",
                     "reject": false,
@@ -337,7 +349,14 @@ describe("Backend: Pending Murals", function() {
                     "title": "My Mural",
                     "desc": "I changed the description",
                     "artist": "My name, maybe contact info",
-                    "images": ["https://image.com/myImage", "https://google.com"],
+                    "images": [{
+                        id: "cloudinary_public_id",
+                        url: "https://image.com/myImage"
+                    },
+                    {
+                        id: "cloudinary_public_id_2",
+                        url: "https://google.com"
+                    }],
                     "uploader": "This better be changed as well",
                     "reject": true,
                     "notes": ""
@@ -355,7 +374,14 @@ describe("Backend: Pending Murals", function() {
                     "desc": "I changed the description",
                     "artist": "My name, maybe contact info",
                     "email": "Submitter@email.net",
-                    "images": ["https://image.com/myImage", "https://google.com"],
+                    "images": [{
+                        id: "cloudinary_public_id",
+                        url: "https://image.com/myImage"
+                    },
+                    {
+                        id: "cloudinary_public_id_2",
+                        url: "https://google.com"
+                    }],
                     "id": _id,
                     "uploader": TEST_ADMIN_USERNAME,
                     "reject": true,

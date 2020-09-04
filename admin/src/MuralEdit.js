@@ -61,13 +61,13 @@ class MuralEdit extends Component {
         var formData = new FormData();
         formData.append('title', this.state.title);
         formData.append('email', this.state.email);
+        // TO DO: handle existing images (currently the images will just be replaced w/ files in the edit form)
         for (const index in this.fileInput.current.files) {
             formData.append("image", this.fileInput.current.files[index]);
         }
         formData.append('artist', this.state.artist);
         formData.append("desc", this.state.desc);
         formData.append("instagram", this.state.instagram);
-        // TO DO: handle images
         formData.append("reject", this.state.reject ? 'reject' : 'accept');
         formData.append("notes", this.state.notes);
         formData.append("lng", this.state.lng);

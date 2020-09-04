@@ -37,7 +37,10 @@ Pending Murals list returned.
 			"desc": "My description",
 			"artist": "Artist name, contact info",
 			"email": "Submitter@email.net",
-			"images": ["https://image.com/myImage"],
+			"images": [{
+				"id": "cloudinary_public_id",
+				"url": "https://image.com/myImage"
+			}],
 			"reject": false,
 			"notes": "admin notes"
 		}

@@ -9,7 +9,6 @@ import MuralMap from './MuralMap';
 class MuralInfo extends Component {
     constructor(props) {
         super(props);
-        console.log('type: ', this.props.location.state.type);
         this.state = {
             mural: this.props.location.state.mural,
             type: this.props.location.state.type,
@@ -17,29 +16,29 @@ class MuralInfo extends Component {
             error: false
         };
     }
-    confirmSubmit() {
-        let testobj = {
-            title: 'Confirm mural submission',
-            message: 'This will add the pending mural to the active database and display it on the main website.',
-            buttons: [
-                {
-                    label: 'Confirm',
-                    onClick: function() {
-                        console.log('THIS: ', this);
-                        this.submitMural();
-                    }
-                },
-                {
-                    label: 'Cancel',
-                    onClick: () => {
-                        alert('Cancelled');
-                    }
-                }
-            ]
+    // confirmSubmit() {
+    //     let testobj = {
+    //         title: 'Confirm mural submission',
+    //         message: 'This will add the pending mural to the active database and display it on the main website.',
+    //         buttons: [
+    //             {
+    //                 label: 'Confirm',
+    //                 onClick: function() {
+    //                     console.log('THIS: ', this);
+    //                     this.submitMural();
+    //                 }
+    //             },
+    //             {
+    //                 label: 'Cancel',
+    //                 onClick: () => {
+    //                     alert('Cancelled');
+    //                 }
+    //             }
+    //         ]
 
-        };
-        confirmAlert(testobj);
-    }
+    //     };
+    //     confirmAlert(testobj);
+    // }
 
     submitMural = async() => {
         const mural = {
@@ -70,23 +69,26 @@ class MuralInfo extends Component {
             throw Error(activeResponse.statusText);
         }
 
-        // TO DO: delete from pending collection!
-        this.deleteMural();
-        // const pendingResponse = await fetch('/pending/' + {this.})
+        this.deleteMural(false);
         this.setState({redirect: true});
     }
 
-    deleteMural = async() => {
-        console.log("deletemural func");
-        // TO DO: url based on pending or active
+    deleteMural = async(deleteImages) => {
         let url = '/api/';
-        if (this.state.type === 'active') {
-            url += 'list/';
-        } else {
-            url += 'pending/' + this.state.type + '/';
+        this.state.type === 'active' ? url += 'list/' : url += 'pending/' + this.state.type + '/';
+
+        // Add images to response body if deleteImages
+        const body = {};
+        if (deleteImages) {
+            body.images = this.state.mural.properties.images;
         }
+
         const response = await fetch(url + this.state.mural.properties.id, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+              },
+            body: JSON.stringify(body)
         });
         if (response.status !== 200) {
             this.setState({error: true});
@@ -116,7 +118,7 @@ class MuralInfo extends Component {
                                     return (<Carousel.Item key={i}>
                                         <img
                                         className="d-block w-100"
-                                        src={image}
+                                        src={image.url}
                                         alt="First slide"
                                         />
                                     </Carousel.Item>);
@@ -150,7 +152,7 @@ class MuralInfo extends Component {
                                 : <span/>
                             }
                             
-                            <Button variant="btn btn-danger" style={{"marginLeft": "10px"}} onClick={this.deleteMural}>
+                            <Button variant="btn btn-danger" style={{"marginLeft": "10px"}} onClick={() => this.deleteMural(true)}>
                                 Delete Mural
                             </Button>
                         </div> : 

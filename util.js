@@ -61,8 +61,16 @@ const GeoJSONSchema = {
                 "images": {
                     "type": "array",
                     "items": {
-                        "type": "string",
-                        "format": "uri",
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "url": {
+                                "type": "string",
+                                "format": "uri"
+                            }
+                        },
                         "maxItems": process.env.MAX_IMAGES || 10
                     }
                 },
@@ -145,14 +153,13 @@ exports.isAdmin = function(req, res, next) {
     res.sendStatus(403);
 };
 
-
 /**
  * Upload files to Cloudinary image hosting database.
  * @param {Array} files Array of files from submission form
  * @returns Array of Cloudinary image links
  */
 exports.uploadImages = async (files) => {
-    const imageLinks = [];
+    const images = [];
     for (file of files) {
         if (file.mimetype.split('/')[0] === "image") {
             const formattedFile = parser.format(
@@ -162,8 +169,21 @@ exports.uploadImages = async (files) => {
             const result = await cloudinary.uploader.upload(formattedFile, (error) => {
                 if (error) console.log(error);
             });
-            imageLinks.push(result.url);  
+            images.push({
+                id: result.public_id,
+                url: result.url
+            });  
         } 
     }
-    return imageLinks;
+    return images;
+};
+
+/**
+ * Delete image from Cloudinary image hosting database.
+ * @param {String} Cloudinary public_id of image
+ */
+exports.deleteImage = async (id) => {
+    const result = await cloudinary.uploader.destroy(id, (error) => {
+        if (error) console.log(error);
+    });
 };

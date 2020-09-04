@@ -1,6 +1,6 @@
 // Pending Murals routes
 const router = require("express").Router();
-const { getPendingType, isLoggedIn, validateMural, uploadImages, isAdmin } = require("../util.js");
+const { getPendingType, isLoggedIn, validateMural, uploadImages, deleteImage, isAdmin } = require("../util.js");
 const mongoose = require("mongoose");
 const multer = require('multer');
 const upload = multer();
@@ -31,7 +31,7 @@ router.post("/:type",
     upload.array("image"),
     async function(req, res) {
         // Upload images to Cloudinary
-        const imageLinks = await uploadImages(req.files);
+        const images = await uploadImages(req.files);
         const formData = req.body;
 
         // Create JSON object using form data
@@ -47,7 +47,7 @@ router.post("/:type",
                 artist: formData.artist,
                 email: formData.email,
                 instagram: formData.instagram,
-                images: imageLinks,
+                images: images,
                 uploader: "anonymous uploader",
                 notes: "",
                 reject: false
@@ -123,7 +123,7 @@ router.put("/:type/:id",
             }
 
             // Upload images to Cloudinary
-            const imageLinks = await uploadImages(req.files);
+            const images = await uploadImages(req.files);
             const formData = req.body;
 
             // Create JSON object using form data
@@ -136,7 +136,7 @@ router.put("/:type/:id",
                     artist: formData.artist,
                     email: formData.email,
                     instagram: formData.instagram,
-                    images: imageLinks,
+                    images: images,
                     id: req.params.id,
                     uploader: doc.properties.uploader,
                     reject: formData.reject === "reject",
@@ -187,10 +187,16 @@ router.delete("/:type/:id",
             return;
         }
         try {
-            req.type.findByIdAndDelete(req.params.id, function (err) {
+            req.type.findByIdAndDelete(req.params.id, async function (err) {
                 if (err) {
                     console.log("--->PENDING MURAL DELETION ERROR: " + err);
                 } else {
+                    if (req.body.images) {
+                        // Delete images from cloudinary database
+                        for (let obj in req.body.images) {
+                            await deleteImage(req.body.images[obj].id);
+                        }
+                    }
                     res.sendStatus(200);
                 }
             });

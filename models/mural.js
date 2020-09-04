@@ -43,7 +43,14 @@ const muralSchema = new mongoose.Schema({
             type: String,
             default: "No Instagram"
         },
-        images: [ String ],
+        images: [{
+            id: {
+                type: String,
+            },
+            url: {
+                type: String
+            }
+        }],
         uploader: {
             type: String,
             default: "Anonymous"
@@ -72,7 +79,14 @@ const pendingSchema = new mongoose.Schema({
         artist: String,
         email: String,
         instagram: String,
-        images: [ String ],
+        images: [{
+            id: {
+                type: String,
+            },
+            url: {
+                type: String
+            }
+        }],
         uploader: String,
         notes: String,
         reject: Boolean,
