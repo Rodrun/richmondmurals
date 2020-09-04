@@ -10,7 +10,7 @@ From the root directory.
 
 * Install: `yarn install`
 
-**Note:** Environment variable `URI` is necessary to connect to the database.
+**Note:** Environment variables `URI` and `CLOUDINARY_URL` are necessary to connect to the database. See Heroku config vars for the appropriate values.
 
 ### Development
 
