@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { Button, Carousel } from 'react-bootstrap';
-import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
 import MuralMap from './MuralMap';
 
@@ -16,29 +14,6 @@ class MuralInfo extends Component {
             error: false
         };
     }
-    // confirmSubmit() {
-    //     let testobj = {
-    //         title: 'Confirm mural submission',
-    //         message: 'This will add the pending mural to the active database and display it on the main website.',
-    //         buttons: [
-    //             {
-    //                 label: 'Confirm',
-    //                 onClick: function() {
-    //                     console.log('THIS: ', this);
-    //                     this.submitMural();
-    //                 }
-    //             },
-    //             {
-    //                 label: 'Cancel',
-    //                 onClick: () => {
-    //                     alert('Cancelled');
-    //                 }
-    //             }
-    //         ]
-
-    //     };
-    //     confirmAlert(testobj);
-    // }
 
     submitMural = async() => {
         const mural = {
